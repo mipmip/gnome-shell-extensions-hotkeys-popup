@@ -1,0 +1,35 @@
+.background-boxlayout {
+    color: #ffffff;
+    background-color: rgba(10,10,10,0.7);
+    border-radius: 10px;
+}
+
+.superkey-prompt {
+    text-align: center;
+    padding-bottom: 1em;
+}
+
+.left-boxlayout {
+    padding: 1.5em;
+    padding-top: 0em;
+}
+
+.right-boxlayout {
+    padding: 1.5em;
+    padding-top: 0em;
+}
+
+.shortcut-section {
+    padding-top: .5em;
+    padding-bottom: .5em;
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.item-boxlayout {
+    font-size: 15px;
+}
+
+.shortcut-key-label {
+    width: 150px;
+}

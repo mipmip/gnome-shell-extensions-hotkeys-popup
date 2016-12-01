@@ -1,0 +1,19 @@
+<schemalist>
+  <schema id="org.gnome.shell.extensions.shortcuts" path="/org/gnome/shell/extensions/shortcuts/">
+    <key name="use-custom-shortcuts" type="b">
+      <default>false</default>
+      <summary>Use an alternative file for shortcut descriptions</summary>
+      <description>If true the shortcut file specified as shortcuts-file will be used for custom shortcuts.</description>
+    </key>
+    <key name="shortcuts-file" type="s">
+      <default>''</default>
+      <summary>Alternative file for shortcut descriptions</summary>
+      <description>If not empty it points to the shortcut file that will be read for the shortcut descriptions.</description>
+    </key>
+    <key name="show-icon" type="b">
+      <default>false</default>
+      <summary>Toggles the icon on the top panel</summary>
+      <description>If true an icon to activate the extension will be visible on the top pannel.</description>
+    </key>
+  </schema>
+</schemalist>

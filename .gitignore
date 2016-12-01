@@ -1,0 +1,16 @@
+Makefile
+aclocal.m4
+/autom4te.cache/
+*.log
+*.status
+configure
+install-sh
+missing
+*.gmo
+Makefile.in
+*~
+po/stamp-it
+POTFILES*
+*.gschema.xml.in
+*.gschema.xml
+gschemas.compiled

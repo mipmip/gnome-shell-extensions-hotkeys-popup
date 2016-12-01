@@ -1,0 +1,106 @@
+[
+    {
+        "name": "Window Navigation",
+        "shortcuts": [
+            {
+                "key": "Alt + Tab",
+                "description": "Switches between windows"
+            },
+            {
+                "key": "Super",
+                "description": "Spreads all windows"
+            },
+            {
+                "key": "Super + Left/Right",
+                "description": "Tiles windows to the left or right"
+            },
+            {
+                "key": "Super + Up",
+                "description": "Maximize window"
+            },
+            {
+                "key": "Alt + F4",
+                "description": "Close window"
+            },
+            {
+                "key": "Super + Mouse Drag",
+                "description": "Move window"
+            },
+            {
+                "key": "F11",
+                "description": "Make full screen/restore"
+            },
+            {
+                "key": "Super + H",
+                "description": "Hide window"
+            }
+        ]
+    },
+    {
+        "name": "Run and Close Applications",
+        "shortcuts": [
+            {
+                "key": "Alt + F2",
+                "description": "Run dialog"
+            },
+            {
+                "key": "Super + 1,2,3,...",
+                "description": "Run app by position in the launcher"
+            },
+            {
+                "key": "Super + T",
+                "description": "Open terminal"
+            },
+            {
+                "key": "Super + Q",
+                "description": "Quit application"
+            }
+        ]
+    },
+    {
+        "name": "System Shortcuts",
+        "shortcuts": [
+            {
+                "key": "Super + Space",
+                "description": "Switch keyboard layout"
+            },
+            {
+                "key": "Ctrl + Alt + Del",
+                "description": "Opens the shutdown menu"
+            },
+            {
+                "key": "Super + L",
+                "description": "Locks the screen"
+            },
+            {
+                "key": "Alt + F2, r",
+                "description": "Restart GNOME Shell"
+            }
+        ]
+    },
+    {
+        "name": "Application Shortcuts",
+        "shortcuts": [
+            {
+                "key": "Ctrl + W",
+                "description": "Close tab in tab enabled apps"
+            },
+            {
+                "key": "Ctrl + T",
+                "description": "Opens new tab in tab enabled apps"
+            },
+            {
+                "key": "Ctrl + Shift + T",
+                "description": "Reopen last closed tab in web browser"
+            },
+            {
+                "key": "F5",
+                "description": "Evince (document viewer) presentation mode)"
+            },
+            {
+                "key": "F9",
+                "description": "LibreOffice presentation mode"
+            }
+        ]
+    }
+]
