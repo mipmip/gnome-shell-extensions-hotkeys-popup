@@ -35,6 +35,7 @@ const Convenience = Me.imports.convenience;
 const _ = Gettext.gettext;
 
 let button, stage, panel_panel, left_panel, right_panel;
+let _isAdded;
 
 /**
  * Initialises the plugin.
@@ -46,6 +47,7 @@ function init() {
         Lang.bind(this, this._toggleIcon));
     this._settings.connect('changed::use-custom-shortcuts', 
         Lang.bind(this, this._setShortcutsFile));
+    _isAdded = false;
 }
 
 /*
@@ -110,7 +112,7 @@ function _showShortcuts() {
 
     stage.set_position(monitor.x + Math.floor(monitor.width / 2 - stage.width / 2),
                       monitor.y + Math.floor(monitor.height / 2 - stage.height / 2));
-    Mainloop.timeout_add(10000, _runHideAnimation);
+    Mainloop.timeout_add(3000, _runHideAnimation);
 }
 
 /**
@@ -199,7 +201,10 @@ function _hideShortcuts() {
 function _toggleIcon() {
     let SHOW_ICON = this._settings.get_boolean('show-icon');
     if (!SHOW_ICON) {
-        Main.panel._rightBox.remove_child(button);
+        if (_isAdded) {
+            Main.panel._rightBox.remove_child(button);
+            _isAdded = false;
+        }
         return;
     }
     button = new St.Bin({ style_class: 'panel-button',
@@ -215,6 +220,7 @@ function _toggleIcon() {
     button.connect('button-press-event', _showShortcuts);
 
     Main.panel._rightBox.insert_child_at_index(button, 0);
+    _isAdded = true;
 }
 
 /**
