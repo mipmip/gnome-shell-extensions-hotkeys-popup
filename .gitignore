@@ -10,7 +10,8 @@ missing
 Makefile.in
 *~
 po/stamp-it
-POTFILES*
+POTFILES
+POTFILES.skip
 *.gschema.xml.in
 *.gschema.xml
 gschemas.compiled

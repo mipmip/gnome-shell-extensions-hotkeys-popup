@@ -1,78 +1,73 @@
-# Translations for the Shortcuts package
-# Copyright (C) 2016 Kyle Robbertze
-# This file is distributed under the same license as the Shortcuts package.
-# Kyle Robbertze <kyle@aims.ac.za>, 2016
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Shortcuts 1\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-01 09:33+0200\n"
-"PO-Revision-Date: 2016-12-01 09:45+0200\n"
-"Last-Translator: Kyle Robbertze <kyle@aims.ac.za>\n"
-"Language-Team: English <kyle@aims.ac.za>\n"
-"Language: en\n"
+"POT-Creation-Date: 2016-12-01 11:26+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../src/extension.js:66
 msgid "The super key is the Windows key on most keyboards"
-msgstr "The super key is the Windows key on most keyboards"
+msgstr ""
 
 #: ../src/extension.js:83
 #, javascript-format
 msgid "Shortcuts file not found: '%s'"
-msgstr "Shortcuts file not found: '%s'"
+msgstr ""
 
 #: ../src/extension.js:90
 #, javascript-format
 msgid "Unable to read file: '%s'"
-msgstr "Unable to read file: '%s'"
+msgstr ""
 
 #: ../src/prefs.js:32
 msgid "Custom Shortcuts File"
-msgstr "Custom Shortcuts File"
+msgstr ""
 
 #: ../src/prefs.js:37
 msgid "Select shortcut file"
-msgstr "Select shortcut file"
+msgstr ""
 
 #: ../src/prefs.js:49
 msgid "Show tray icon"
-msgstr "Show tray icon"
+msgstr ""
 
 #: ../src/schemas/org.gnome.shell.extensions.shortcuts.gschema.xml:6
 msgid "Use an alternative file for shortcut descriptions"
-msgstr "Use an alternative file for shortcut descriptions"
+msgstr ""
 
 #: ../src/schemas/org.gnome.shell.extensions.shortcuts.gschema.xml:7
 msgid ""
 "If true the shortcut file specified as shortcuts-file will be used for "
 "custom shortcuts."
 msgstr ""
-"If true the shortcuts file specified as shortcuts-file will be used for "
-"custom shortcuts."
 
 #: ../src/schemas/org.gnome.shell.extensions.shortcuts.gschema.xml:11
 msgid "Alternative file for shortcut descriptions"
-msgstr "Alternative file for shortcut descriptions"
+msgstr ""
 
 #: ../src/schemas/org.gnome.shell.extensions.shortcuts.gschema.xml:12
 msgid ""
 "If not empty it points to the shortcut file that will be read for the "
 "shortcut descriptions."
 msgstr ""
-"If not empty it points to the shortcut file that will be read for the "
-"shortcut descriptions."
 
 #: ../src/schemas/org.gnome.shell.extensions.shortcuts.gschema.xml:16
 msgid "Toggles the icon on the top panel"
-msgstr "Toggles the icon on the top panel"
+msgstr ""
 
 #: ../src/schemas/org.gnome.shell.extensions.shortcuts.gschema.xml:17
 msgid ""
 "If true an icon to activate the extension will be visible on the top pannel."
 msgstr ""
-"If true an icon to activate the extension will be visible on the top pannel."
-
