@@ -18,25 +18,44 @@ const _ = Gettext.gettext;
 
 let button, stage, panel_panel, left_panel, right_panel;
 
-function _hideShortcuts() {
-    panel_panel.remove_actor(left_panel);
-    panel_panel.remove_actor(right_panel);
-    stage.remove_actor(panel_panel);
-    Main.uiGroup.remove_actor(stage);
-    left_panel = null;
-    right_panel = null;
-    panel_panel = null;
-    stage = null;
+/**
+ * Initialises the plugin.
+ */
+function init() {
+    Convenience.initTranslations();
+    this._settings = Convenience.getSettings();
+    this._settings.connect('changed::show-icon', 
+        Lang.bind(this, this._toggleIcon));
+    this._settings.connect('changed::use-custom-shortcuts', 
+        Lang.bind(this, this._setShortcutsFile));
 }
 
-function _runHideAnimation() {
-    Tweener.addTween(stage,
-                     { opacity: 0,
-                       time: 1,
-                       transition: 'easeOutQuad',
-                       onComplete: _hideShortcuts });
+/*
+ * Enables the plugin by adding listeners and icons as necessary
+ */
+function enable() {
+    Main.overview._specialToggle = function (evt) {
+        _showShortcuts();
+    };
+    Main.wm.setCustomKeybindingHandler('toggle-overview', 
+        Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW, 
+        Lang.bind(Main.overview, Main.overview._specialToggle));
+    _toggleIcon();
 }
 
+/**
+ * Removes all traces of the listeners and icons that the extension created
+ */
+function disable() {
+    Main.panel._rightBox.remove_child(button);
+    Main.wm.setCustomKeybindingHandler('toggle-overview', 
+        Shell.ActionMode.NORMAL, Lang.bind(Main.overview, Main.overview.toggle));
+    delete Main.overview._specialToggle;
+}
+
+/**
+ * Builds the pop-up and shows the shortcut description list
+ */
 function _showShortcuts() {
     if (!stage) {
         stage = new St.BoxLayout({ style_class: 'background-boxlayout',
@@ -76,6 +95,10 @@ function _showShortcuts() {
     Mainloop.timeout_add(10000, _runHideAnimation);
 }
 
+/**
+ * Reads the shortcuts from a file specified in the settings. If this is not
+ * there then it defaults to the shortcuts file provided by the extension.
+ */
 function _readShortcuts() {
     let SHORTCUTS_FILE = this._settings.get_string('shortcuts-file') || 
         Me.dir.get_child('shortcuts.json').get_path();
@@ -126,25 +149,35 @@ function _readShortcuts() {
     }
 }
 
-
-function init() {
-    Convenience.initTranslations();
-    this._settings = Convenience.getSettings();
-    this._settings.connect('changed::show-icon', Lang.bind(this, this._toggleIcon));
-    this._settings.connect('changed::use-custom-shortcuts', 
-        Lang.bind(this, this._setShortcutsFile));
+/**
+ * Runs the fade out animation that cues the removal of the pop-up
+ */
+function _runHideAnimation() {
+    Tweener.addTween(stage,
+                     { opacity: 0,
+                       time: 1,
+                       transition: 'easeOutQuad',
+                       onComplete: _hideShortcuts });
 }
 
-function enable() {
-    Main.overview._specialToggle = function (evt) {
-        _showShortcuts();
-    };
-    Main.wm.setCustomKeybindingHandler('toggle-overview', 
-        Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW, 
-        Lang.bind(Main.overview, Main.overview._specialToggle));
-    _toggleIcon();
+/**
+ * Removes the actors used to make the pop-up describing the shortcuts.
+ */
+function _hideShortcuts() {
+    panel_panel.remove_actor(left_panel);
+    panel_panel.remove_actor(right_panel);
+    stage.remove_actor(panel_panel);
+    Main.uiGroup.remove_actor(stage);
+    left_panel = null;
+    right_panel = null;
+    panel_panel = null;
+    stage = null;
 }
 
+/*
+ * Shows or hides the icon in the right box of the top panel as the user
+ * changes the setting
+ */
 function _toggleIcon() {
     let SHOW_ICON = this._settings.get_boolean('show-icon');
     if (!SHOW_ICON) {
@@ -166,16 +199,12 @@ function _toggleIcon() {
     Main.panel._rightBox.insert_child_at_index(button, 0);
 }
 
+/**
+ * Updates the shortcut file location when it is changed in the settings
+ */
 function _setShortcutsFile() {
     if (!this._settings.get_boolean('use-custom-shortcuts')) {
         this._settings.set_string('shortcuts-file', 
             Me.dir.get_child('shortcuts.json').get_path());
     }
-}
-
-function disable() {
-    Main.panel._rightBox.remove_child(button);
-    Main.wm.setCustomKeybindingHandler('toggle-overview', 
-        Shell.ActionMode.NORMAL, Lang.bind(Main.overview, Main.overview.toggle));
-    delete Main.overview._specialToggle;
 }

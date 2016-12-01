@@ -11,15 +11,34 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience;
 
+/**
+ * Initialises the preferences widget
+ */
 function init() {
     Convenience.initTranslations();
 }
 
+/**
+ * Builds the preferences widget
+ */
+function buildPrefsWidget() {
+    let widget = new ShortcutsPrefsWidget();
+    widget.show_all();
+    return widget;
+}
+
+/**
+ * Describes the widget that is shown in the extension settings section of
+ * GNOME tweek.
+ */
 const ShortcutsPrefsWidget = new GObject.Class({
     Name: 'Shortcuts.Prefs.Widget',
     GTypeName: 'ShortcutsPrefsWidget',
     Extends: Gtk.Grid,
 
+    /**
+     * Initalises the widget
+     */
     _init: function(params) {
         this.parent(params);
         this.margin = 12;
@@ -53,9 +72,3 @@ const ShortcutsPrefsWidget = new GObject.Class({
         this.attach(showIconCheckButton, 0, 1, 2, 1)
     }
 });
-
-function buildPrefsWidget() {
-    let widget = new ShortcutsPrefsWidget();
-    widget.show_all();
-    return widget;
-}
