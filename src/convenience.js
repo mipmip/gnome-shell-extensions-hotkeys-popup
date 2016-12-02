@@ -1,19 +1,19 @@
 /*********************************************************************
-* The LogOutButton is Copyright (C) 2016 Kyle Robbertze
+* The Shortcuts is Copyright (C) 2016 Kyle Robbertze
 * African Institute for Mathematical Sciences, South Africa
 *
-* LogOutButton is free software: you can redistribute it and/or modify
+* Shortcuts is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
-* LogOutButton is distributed in the hope that it will be useful,
+* Shortcuts is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with LogOutButton.  If not, see <http://www.gnu.org/licenses/>.
+* along with Shortcuts.  If not, see <http://www.gnu.org/licenses/>.
 **********************************************************************/
 
 const Gettext = imports.gettext;
