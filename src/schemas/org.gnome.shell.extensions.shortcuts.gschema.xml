@@ -11,7 +11,7 @@
       <description>If not empty it points to the shortcut file that will be read for the shortcut descriptions.</description>
     </key>
     <key name="show-icon" type="b">
-      <default>false</default>
+      <default>true</default>
       <summary>Toggles the icon on the top panel</summary>
       <description>If true an icon to activate the extension will be visible on the top pannel.</description>
     </key>
