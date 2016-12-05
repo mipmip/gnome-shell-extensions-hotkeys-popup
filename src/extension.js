@@ -119,7 +119,7 @@ function _showShortcuts() {
  * there then it defaults to the shortcuts file provided by the extension.
  */
 function _readShortcuts() {
-    let SHORTCUTS_FILE = (this._settings.get_boolean('use-custom-shortcuts') ?
+    let SHORTCUTS_FILE = this._settings.get_boolean('use-custom-shortcuts') ?
             this._settings.get_string('shortcuts-file') :
             Me.dir.get_child('shortcuts.json').get_path();
     if (!GLib.file_test(SHORTCUTS_FILE, GLib.FileTest.EXISTS)) {
