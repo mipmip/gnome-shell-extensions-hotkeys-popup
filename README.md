@@ -12,8 +12,7 @@ Building Shortcuts from source requires:
 
 ### Install
 
-    mkdir -p ~/.local/share/gnome-shell/extensions/Shortcuts@kyle.aims.ac.za
-    cp -r src/* locale ~/.local/share/gnome-shell/extensions/Shortcuts@kyle.aims.ac.za/
+    ./install.sh
 
 You may need to restart GNOME (Alt + F2, r) before you see Shortcuts in your
 list of extensions
