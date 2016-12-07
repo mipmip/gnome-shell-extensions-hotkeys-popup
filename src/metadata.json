@@ -5,6 +5,6 @@
     "gettext-domain": "Shortcuts",
     "settings-schema": "org.gnome.shell.extensions.shortcuts",
     "shell-version": [
-        "3.22.2"
+        "3.22"
     ]
 }
