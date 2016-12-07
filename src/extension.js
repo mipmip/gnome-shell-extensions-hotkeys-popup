@@ -66,7 +66,10 @@ function enable() {
  * Removes all traces of the listeners and icons that the extension created
  */
 function disable() {
-    Main.panel._rightBox.remove_child(button);
+    if (_isAdded) {
+        Main.panel._rightBox.remove_child(button);
+        _isAdded = false;
+    }
     Main.wm.setCustomKeybindingHandler('toggle-overview', 
         Shell.ActionMode.NORMAL, Lang.bind(Main.overview, Main.overview.toggle));
     delete Main.overview._specialToggle;
