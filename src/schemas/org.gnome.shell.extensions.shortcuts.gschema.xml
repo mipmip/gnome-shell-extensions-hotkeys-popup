@@ -13,7 +13,7 @@
     <key name="show-icon" type="b">
       <default>true</default>
       <summary>Toggles the icon on the top panel</summary>
-      <description>If true an icon to activate the extension will be visible on the top pannel.</description>
+      <description>If true an icon to activate the extension will be visible on the top panel.</description>
     </key>
   </schema>
 </schemalist>
