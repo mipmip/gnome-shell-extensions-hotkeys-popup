@@ -1,5 +1,5 @@
 /*********************************************************************
-* The Shortcuts is Copyright (C) 2016 Kyle Robbertze
+* Shortcuts is Copyright (C) 2016 Kyle Robbertze
 * African Institute for Mathematical Sciences, South Africa
 *
 * Shortcuts is free software: you can redistribute it and/or modify

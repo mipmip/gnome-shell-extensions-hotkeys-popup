@@ -8,11 +8,11 @@
             },
             {
                 "key": "Super",
-                "description": "Spreads all windows"
+                "description": "Enter overview"
             },
             {
                 "key": "Super + Left/Right",
-                "description": "Tiles windows to the left or right"
+                "description": "Tile windows to the left or right"
             },
             {
                 "key": "Super + Up",
@@ -32,7 +32,27 @@
             },
             {
                 "key": "Super + H",
-                "description": "Hide window"
+                "description": "Minimize window"
+            },
+            {
+                "key": "Super + Page Down",
+                "description": "Switch to next workspace"
+            },
+            {
+                "key": "Super + Page Up",
+                "description": "Switch to previous workspace"
+            },
+            {
+                "key": "Super + Home",
+                "description": "Switch to first workspace"
+            },
+            {
+                "key": "Super + End",
+                "description": "Switch to last workspace"
+            },
+            {
+                "key": "Super + Tab",
+                "description": "Switch to next application"
             }
         ]
     },
@@ -75,6 +95,14 @@
             {
                 "key": "Alt + F2, r",
                 "description": "Restart GNOME Shell"
+            },
+            {
+                "key": "Alt + Super + 8",
+                "description": "Toggle zoom"
+            },
+            {
+                "key": "Alt + Super + S",
+                "description": "Toggle screen reader"
             }
         ]
     },
@@ -100,6 +128,27 @@
             {
                 "key": "F9",
                 "description": "LibreOffice presentation mode"
+            }
+        ]
+    },
+    {
+        "name": "Screenshot Shortcuts",
+        "shortcuts": [
+            {
+                "key": "Alt + Print",
+                "description": "Take a screenshot"
+            },
+            {
+                "key": "Shift + Print",
+                "description": "Take a screenshot of a region"
+            },
+            {
+                "key": "Ctrl + Print",
+                "description": "Take a screenshot and paste in a clipboard"
+            },
+            {
+                "key": "Ctrl + Alt + Shift + R",
+                "description": "Video capture desktop"
             }
         ]
     }
