@@ -34,7 +34,7 @@ const Convenience = Me.imports.convenience;
 const _ = Gettext.gettext;
 
 let button, stage, panel_panel, left_panel, right_panel;
-let _isAdded;
+let _isAdded, _visible;
 
 /**
  * Initialises the plugin.
@@ -54,7 +54,7 @@ function init() {
  */
 function enable() {
     Main.overview._specialToggle = function (evt) {
-        _showShortcuts();
+        _toggleShortcuts();
     };
     Main.wm.setCustomKeybindingHandler('toggle-overview', 
         Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW, 
@@ -73,48 +73,57 @@ function disable() {
     Main.wm.setCustomKeybindingHandler('toggle-overview', 
         Shell.ActionMode.NORMAL, Lang.bind(Main.overview, Main.overview.toggle));
     delete Main.overview._specialToggle;
+    _visible = false;
 }
 
 /**
  * Builds the pop-up and shows the shortcut description list
  */
-function _showShortcuts() {
-    if (!stage) {
-        stage = new St.BoxLayout({ style_class: 'background-boxlayout',
-                              pack_start: false,
-                              vertical: true });
-        panel_panel = new St.BoxLayout({ style_class: 'panel-boxlayout',
-                              pack_start: false,
-                              vertical: false});
+function _toggleShortcuts() {
+    if (!_visible) {
+        if (!stage) { // Show popup
+            stage = new St.BoxLayout({ style_class: 'background-boxlayout',
+                                  pack_start: false,
+                                  vertical: true });
+            panel_panel = new St.BoxLayout({ style_class: 'panel-boxlayout',
+                                  pack_start: false,
+                                  vertical: false});
 
-        stage.add_actor(panel_panel);
+            stage.add_actor(panel_panel);
 
-        left_panel = new St.BoxLayout({
-            style_class: 'left-boxlayout',
-            pack_start: false,
-            vertical: true });
-        right_panel = new St.BoxLayout({
-            style_class: 'right-boxlayout',
-            pack_start: false,
-            vertical: true });
-        panel_panel.add_actor(left_panel);
-        panel_panel.add_actor(right_panel);
+            left_panel = new St.BoxLayout({
+                style_class: 'left-boxlayout',
+                pack_start: false,
+                vertical: true });
+            right_panel = new St.BoxLayout({
+                style_class: 'right-boxlayout',
+                pack_start: false,
+                vertical: true });
+            panel_panel.add_actor(left_panel);
+            panel_panel.add_actor(right_panel);
 
-        _readShortcuts();
+            _readShortcuts();
 
-        stage.add_actor(new St.Label({ 
-            style_class: 'superkey-prompt', 
-            text: _("The super key is the Windows key on most keyboards")
-        }));
+            stage.add_actor(new St.Label({ 
+                style_class: 'superkey-prompt', 
+                text: _("The super key is the Windows key on most keyboards")
+            }));
 
-        Main.uiGroup.add_actor(stage);
+            Main.uiGroup.add_actor(stage);
+        }
+
+        let monitor = Main.layoutManager.primaryMonitor;
+
+        stage.set_position(monitor.x + Math.floor(monitor.width / 2 - stage.width / 2),
+                          monitor.y + Math.floor(monitor.height / 2 - stage.height / 2));
+        _visible = true;
+    } else { // Hide popup
+        Tweener.addTween(stage,
+                         { opacity: 0,
+                           time: 1,
+                           transition: 'easeOutQuad',
+                           onComplete: _hideShortcuts });
     }
-
-    let monitor = Main.layoutManager.primaryMonitor;
-
-    stage.set_position(monitor.x + Math.floor(monitor.width / 2 - stage.width / 2),
-                      monitor.y + Math.floor(monitor.height / 2 - stage.height / 2));
-    Mainloop.timeout_add(3000, _runHideAnimation);
 }
 
 /**
@@ -173,17 +182,6 @@ function _readShortcuts() {
 }
 
 /**
- * Runs the fade out animation that cues the removal of the pop-up
- */
-function _runHideAnimation() {
-    Tweener.addTween(stage,
-                     { opacity: 0,
-                       time: 1,
-                       transition: 'easeOutQuad',
-                       onComplete: _hideShortcuts });
-}
-
-/**
  * Removes the actors used to make the pop-up describing the shortcuts.
  */
 function _hideShortcuts() {
@@ -195,6 +193,7 @@ function _hideShortcuts() {
     right_panel = null;
     panel_panel = null;
     stage = null;
+    _visible = false;
 }
 
 /*
@@ -220,7 +219,7 @@ function _toggleIcon() {
                              style_class: 'system-status-icon' });
 
     button.set_child(icon);
-    button.connect('button-press-event', _showShortcuts);
+    button.connect('button-press-event', _toggleShortcuts);
 
     Main.panel._rightBox.insert_child_at_index(button, 0);
     _isAdded = true;
