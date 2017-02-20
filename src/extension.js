@@ -209,20 +209,22 @@ function _toggleIcon() {
         }
         return;
     }
-    button = new St.Bin({ style_class: 'panel-button',
-                          reactive: true,
-                          can_focus: true,
-                          x_fill: true,
-                          y_fill: false,
-                          track_hover: true });
-    let icon = new St.Icon({ icon_name: 'preferences-desktop-keyboard-shortcuts-symbolic',
-                             style_class: 'system-status-icon' });
+    if (!_isAdded) {
+        button = new St.Bin({ style_class: 'panel-button',
+                              reactive: true,
+                              can_focus: true,
+                              x_fill: true,
+                              y_fill: false,
+                              track_hover: true });
+        let icon = new St.Icon({ icon_name: 'preferences-desktop-keyboard-shortcuts-symbolic',
+                                 style_class: 'system-status-icon' });
 
-    button.set_child(icon);
-    button.connect('button-press-event', _toggleShortcuts);
+        button.set_child(icon);
+        button.connect('button-press-event', _toggleShortcuts);
 
-    Main.panel._rightBox.insert_child_at_index(button, 0);
-    _isAdded = true;
+        Main.panel._rightBox.insert_child_at_index(button, 0);
+        _isAdded = true;
+    }
 }
 
 /**
