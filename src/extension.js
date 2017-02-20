@@ -1,19 +1,19 @@
 /*********************************************************************
-* Shortcuts is Copyright (C) 2016 Kyle Robbertze
-* African Institute for Mathematical Sciences, South Africa
-*
-* Shortcuts is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License version 3 as 
-* published by the Free Software Foundation.
-*
-* Shortcuts is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Shortcuts.  If not, see <http://www.gnu.org/licenses/>.
-**********************************************************************/
+ * Shortcuts is Copyright (C) 2016 Kyle Robbertze
+ * African Institute for Mathematical Sciences, South Africa
+ *
+ * Shortcuts is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as 
+ * published by the Free Software Foundation.
+ *
+ * Shortcuts is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Shortcuts.  If not, see <http://www.gnu.org/licenses/>.
+ **********************************************************************/
 
 const GLib = imports.gi.GLib;
 const Gio = imports.gi.Gio;
@@ -82,12 +82,14 @@ function disable() {
 function _toggleShortcuts() {
     if (!_visible) {
         if (!stage) { // Show popup
-            stage = new St.BoxLayout({ style_class: 'background-boxlayout',
-                                  pack_start: false,
-                                  vertical: true });
-            panel_panel = new St.BoxLayout({ style_class: 'panel-boxlayout',
-                                  pack_start: false,
-                                  vertical: false});
+            stage = new St.BoxLayout({
+                style_class: 'background-boxlayout',
+                pack_start: false,
+                vertical: true });
+            panel_panel = new St.BoxLayout({
+                style_class: 'panel-boxlayout',
+                pack_start: false,
+                vertical: false});
 
             stage.add_actor(panel_panel);
 
@@ -114,15 +116,16 @@ function _toggleShortcuts() {
 
         let monitor = Main.layoutManager.primaryMonitor;
 
-        stage.set_position(monitor.x + Math.floor(monitor.width / 2 - stage.width / 2),
-                          monitor.y + Math.floor(monitor.height / 2 - stage.height / 2));
+        stage.set_position(
+            monitor.x + Math.floor(monitor.width / 2 - stage.width / 2),
+            monitor.y + Math.floor(monitor.height / 2 - stage.height / 2));
         _visible = true;
     } else { // Hide popup
         Tweener.addTween(stage,
-                         { opacity: 0,
-                           time: 1,
-                           transition: 'easeOutQuad',
-                           onComplete: _hideShortcuts });
+            { opacity: 0,
+                time: 1,
+                transition: 'easeOutQuad',
+                onComplete: _hideShortcuts });
     }
 }
 
@@ -132,8 +135,8 @@ function _toggleShortcuts() {
  */
 function _readShortcuts() {
     let SHORTCUTS_FILE = this._settings.get_boolean('use-custom-shortcuts') ?
-            this._settings.get_string('shortcuts-file') :
-            Me.dir.get_child('shortcuts.json').get_path();
+        this._settings.get_string('shortcuts-file') :
+        Me.dir.get_child('shortcuts.json').get_path();
     if (!GLib.file_test(SHORTCUTS_FILE, GLib.FileTest.EXISTS)) {
         let msg = _("Shortcuts file not found: '%s'").format(SHORTCUTS_FILE);
         Main.notifyError(msg);
@@ -210,14 +213,16 @@ function _toggleIcon() {
         return;
     }
     if (!_isAdded) {
-        button = new St.Bin({ style_class: 'panel-button',
-                              reactive: true,
-                              can_focus: true,
-                              x_fill: true,
-                              y_fill: false,
-                              track_hover: true });
-        let icon = new St.Icon({ icon_name: 'preferences-desktop-keyboard-shortcuts-symbolic',
-                                 style_class: 'system-status-icon' });
+        button = new St.Bin({
+            style_class: 'panel-button',
+            reactive: true,
+            can_focus: true,
+            x_fill: true,
+            y_fill: false,
+            track_hover: true });
+        let icon = new St.Icon({
+            icon_name: 'preferences-desktop-keyboard-shortcuts-symbolic',
+            style_class: 'system-status-icon' });
 
         button.set_child(icon);
         button.connect('button-press-event', _toggleShortcuts);
