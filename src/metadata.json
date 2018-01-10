@@ -1,11 +1,13 @@
 {
-    "name": "Shortcuts", 
-    "uuid": "Shortcuts@kyle.aims.ac.za", 
+    "name": "Shortcuts",
+    "uuid": "Shortcuts@kyle.aims.ac.za",
     "url": "https://gitlab.com/paddatrapper/shortcuts-gnome-extension",
     "description": "This shows a pop-up of useful keyboard shortcuts when Super + S is pressed",
     "gettext-domain": "Shortcuts",
     "settings-schema": "org.gnome.shell.extensions.shortcuts",
     "shell-version": [
-        "3.22"
+        "3.22",
+        "3.24",
+        "3.26"
     ]
 }
