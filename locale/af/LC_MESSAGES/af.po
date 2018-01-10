@@ -1,15 +1,15 @@
 # Afrikaans translations for Shortcuts package
 # Afrikaans messages for Shortcuts.
-# Copyright (C) 2013 THE SHORTCUT'S COPYRIGHT HOLDER
+# Copyright (C) 2016-2018 Kyle Robbertze <kyle@aims.ac.za>
 # This file is distributed under the same license as the Shortcuts package.
-# Kyle Robbertze, kyle@aims.ac.za, 2016
+# Kyle Robbertze, kyle@aims.ac.za, 2016-2018
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Shortcuts 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-01 09:17+0200\n"
-"PO-Revision-Date: 2016-12-01 09:00+0200\n"
+"PO-Revision-Date: 2018-01-10 15:16+0200\n"
 "Last-Translator: Kyle Robbertze <kyle@aims.ac.za>\n"
 "Language-Team: Afrikaans\n"
 "Language: af\n"
