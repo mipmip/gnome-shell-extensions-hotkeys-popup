@@ -1,9 +1,9 @@
 /*********************************************************************
- * Shortcuts is Copyright (C) 2016 Kyle Robbertze
+ * Shortcuts is Copyright (C) 2016-2018 Kyle Robbertze
  * African Institute for Mathematical Sciences, South Africa
  *
  * Shortcuts is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3 as 
+ * it under the terms of the GNU General Public License version 3 as
  * published by the Free Software Foundation.
  *
  * Shortcuts is distributed in the hope that it will be useful,
@@ -17,12 +17,10 @@
 
 const GLib = imports.gi.GLib;
 const Gio = imports.gi.Gio;
-const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 
 const Gettext = imports.gettext;
 const Lang = imports.lang;
-const Mainloop = imports.mainloop;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 
@@ -42,9 +40,7 @@ let _isAdded, _visible;
 function init() {
     Convenience.initTranslations();
     this._settings = Convenience.getSettings();
-    this._settings.connect('changed::show-icon', 
-        Lang.bind(this, this._toggleIcon));
-    this._settings.connect('changed::use-custom-shortcuts', 
+    this._settings.connect('changed::use-custom-shortcuts',
         Lang.bind(this, this._setShortcutsFile));
     _isAdded = false;
 }
@@ -56,10 +52,7 @@ function enable() {
     Main.overview._specialToggle = function (evt) {
         _toggleShortcuts();
     };
-    Main.wm.setCustomKeybindingHandler('toggle-overview', 
-        Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW, 
-        Lang.bind(Main.overview, Main.overview._specialToggle));
-    _toggleIcon();
+    _showIcon();
 }
 
 /**
@@ -70,8 +63,6 @@ function disable() {
         Main.panel._rightBox.remove_child(button);
         _isAdded = false;
     }
-    Main.wm.setCustomKeybindingHandler('toggle-overview', 
-        Shell.ActionMode.NORMAL, Lang.bind(Main.overview, Main.overview.toggle));
     delete Main.overview._specialToggle;
     _visible = false;
 }
@@ -106,8 +97,8 @@ function _toggleShortcuts() {
 
             _readShortcuts();
 
-            stage.add_actor(new St.Label({ 
-                style_class: 'superkey-prompt', 
+            stage.add_actor(new St.Label({
+                style_class: 'superkey-prompt',
                 text: _("The super key is the Windows key on most keyboards")
             }));
 
@@ -160,8 +151,8 @@ function _readShortcuts() {
     for (let i = 0; i < shortcuts.length; i++) {
         listProgress += shortcuts[i].shortcuts.length * 1.0 / shortcutLength;
         let panel = (listProgress < 0.5) ? left_panel : right_panel;
-        panel.add_actor(new St.Label({ 
-            style_class: 'shortcut-section', 
+        panel.add_actor(new St.Label({
+            style_class: 'shortcut-section',
             text: shortcuts[i].name
         }));
         for (let j = 0; j < shortcuts[i].shortcuts.length; j++) {
@@ -170,13 +161,13 @@ function _readShortcuts() {
                 pack_start: false,
                 vertical: false });
             let key = shortcuts[i].shortcuts[j].key;
-            let description = _(shortcuts[i].shortcuts[j].description); 
-            item_panel.add(new St.Label({ 
-                style_class: 'shortcut-key-label', 
+            let description = _(shortcuts[i].shortcuts[j].description);
+            item_panel.add(new St.Label({
+                style_class: 'shortcut-key-label',
                 text: key
             }));
-            item_panel.add(new St.Label({ 
-                style_class: 'shortcut-description-label', 
+            item_panel.add(new St.Label({
+                style_class: 'shortcut-description-label',
                 text: description
             }));
             panel.add_actor(item_panel);
@@ -200,18 +191,9 @@ function _hideShortcuts() {
 }
 
 /*
- * Shows or hides the icon in the right box of the top panel as the user
- * changes the setting
+ * Shows the icon in the right box of the top panel if it is not present
  */
-function _toggleIcon() {
-    let SHOW_ICON = this._settings.get_boolean('show-icon');
-    if (!SHOW_ICON) {
-        if (_isAdded) {
-            Main.panel._rightBox.remove_child(button);
-            _isAdded = false;
-        }
-        return;
-    }
+function _showIcon() {
     if (!_isAdded) {
         button = new St.Bin({
             style_class: 'panel-button',
@@ -237,7 +219,7 @@ function _toggleIcon() {
  */
 function _setShortcutsFile() {
     if (!this._settings.get_boolean('use-custom-shortcuts')) {
-        this._settings.set_string('shortcuts-file', 
+        this._settings.set_string('shortcuts-file',
             Me.dir.get_child('shortcuts.json').get_path());
     }
 }

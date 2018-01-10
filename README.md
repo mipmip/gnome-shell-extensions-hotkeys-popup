@@ -1,7 +1,7 @@
 # Shortcuts
 Shortcuts is a GNOME Shell Extension that displays shortcut descriptions from a
-json file when Super + S is pressed. The default keyboard shortcuts are listed
-in the main package.
+json file when the icon in the tray is pressed. The default keyboard shortcuts
+are listed in the main package.
 
 ## Install
 ### Dependencies:

@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) 2016-2018 Kyle Robbertze <kyle@aims.ac.za>
+# This file is distributed under the same license as the Shortcuts package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Shortcuts 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-01 11:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -39,10 +39,6 @@ msgstr ""
 msgid "Select shortcut file"
 msgstr ""
 
-#: ../src/prefs.js:49
-msgid "Show tray icon"
-msgstr ""
-
 #: ../src/schemas/org.gnome.shell.extensions.shortcuts.gschema.xml:6
 msgid "Use an alternative file for shortcut descriptions"
 msgstr ""
@@ -61,13 +57,4 @@ msgstr ""
 msgid ""
 "If not empty it points to the shortcut file that will be read for the "
 "shortcut descriptions."
-msgstr ""
-
-#: ../src/schemas/org.gnome.shell.extensions.shortcuts.gschema.xml:16
-msgid "Toggles the icon on the top panel"
-msgstr ""
-
-#: ../src/schemas/org.gnome.shell.extensions.shortcuts.gschema.xml:17
-msgid ""
-"If true an icon to activate the extension will be visible on the top pannel."
 msgstr ""
