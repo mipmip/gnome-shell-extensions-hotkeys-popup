@@ -1,9 +1,9 @@
 /*********************************************************************
-* The Shortcuts is Copyright (C) 2016-2018 Kyle Robbertze
+* The Shortcuts is Copyright (C) 2016 Kyle Robbertze
 * African Institute for Mathematical Sciences, South Africa
 *
 * Shortcuts is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License version 3 as
+* it under the terms of the GNU General Public License version 3 as 
 * published by the Free Software Foundation
 *
 * Shortcuts is distributed in the hope that it will be useful,
@@ -15,6 +15,7 @@
 * along with Shortcuts.  If not, see <http://www.gnu.org/licenses/>.
 **********************************************************************/
 
+const GLib = imports.gi.GLib;
 const GObject = imports.gi.GObject;
 const Gio = imports.gi.Gio;
 const Gtk = imports.gi.Gtk;
@@ -63,12 +64,12 @@ const ShortcutsPrefsWidget = new GObject.Class({
 
         this._settings = Convenience.getSettings();
 
-        this.customShortcutsFileCheckButton = new Gtk.CheckButton({
+        this.customShortcutsFileCheckButton = new Gtk.CheckButton({ 
                                         label: _("Custom Shortcuts File") });
         this.attach(this.customShortcutsFileCheckButton, 0, 0, 2, 1);
-        this._settings.bind('use-custom-shortcuts', this.customShortcutsFileCheckButton,
+        this._settings.bind('use-custom-shortcuts', this.customShortcutsFileCheckButton, 
                                         'active', Gio.SettingsBindFlags.DEFAULT);
-        this.shortcutsFile = new Gtk.FileChooserButton ({
+        this.shortcutsFile = new Gtk.FileChooserButton ({ 
                                         title: _("Select shortcut file"),
                                         action: Gtk.FileChooserAction.OPEN });
         this.shortcutsFile.select_uri("file://" + this._settings.get_string('shortcuts-file'));
@@ -80,5 +81,11 @@ const ShortcutsPrefsWidget = new GObject.Class({
             this._settings.set_string('shortcuts-file', path);
         }));
         this.attach(this.shortcutsFile, 3, 0, 1, 1);
+
+        let showIconCheckButton = new Gtk.CheckButton({ label: _("Show tray icon"),
+                                                        margin_top: 6 });
+        this._settings.bind('show-icon', showIconCheckButton, 'active',
+                            Gio.SettingsBindFlags.DEFAULT);
+        this.attach(showIconCheckButton, 0, 1, 2, 1)
     }
 });
