@@ -26,8 +26,9 @@ const Mainloop = imports.mainloop;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 
+const Config = imports.misc.config;
+
 const Main = imports.ui.main;
-// const Tweener = imports.ui.tweener;
 
 const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience;
@@ -118,13 +119,18 @@ function _toggleShortcuts() {
                           monitor.y + Math.floor(monitor.height / 2 - stage.height / 2));
         _visible = true;
     } else { // Hide popup
-/*        Tweener.addTween(stage,
+        let current_version = Config.PACKAGE_VERSION.split('.');
+        if (current_version[0] = 3 && current_version[1] < 38){
+            const Tweener = imports.ui.tweener;
+            Tweener.addTween(stage,
                          { opacity: 0,
                            time: 1,
                            transition: 'easeOutQuad',
                            onComplete: _hideShortcuts });
-                           */
+                           }
+         else{
          _hideShortcuts();
+        }
     }
 }
 
