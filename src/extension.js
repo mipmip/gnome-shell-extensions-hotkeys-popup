@@ -3,7 +3,7 @@
 * African Institute for Mathematical Sciences, South Africa
 *
 * Shortcuts is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License version 3 as 
+* it under the terms of the GNU General Public License version 3 as
 * published by the Free Software Foundation.
 *
 * Shortcuts is distributed in the hope that it will be useful,
@@ -43,9 +43,9 @@ let _isAdded, _visible;
 function init() {
     Convenience.initTranslations();
     this._settings = Convenience.getSettings();
-    this._settings.connect('changed::show-icon', 
+    this._settings.connect('changed::show-icon',
         Lang.bind(this, this._toggleIcon));
-    this._settings.connect('changed::use-custom-shortcuts', 
+    this._settings.connect('changed::use-custom-shortcuts',
         Lang.bind(this, this._setShortcutsFile));
     _isAdded = false;
 }
@@ -57,8 +57,8 @@ function enable() {
     Main.overview._specialToggle = function (evt) {
         _toggleShortcuts();
     };
-    Main.wm.setCustomKeybindingHandler('toggle-overview', 
-        Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW, 
+    Main.wm.setCustomKeybindingHandler('toggle-overview',
+        Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
         Lang.bind(Main.overview, Main.overview._specialToggle));
     _toggleIcon();
 }
@@ -71,7 +71,7 @@ function disable() {
         Main.panel._rightBox.remove_child(button);
         _isAdded = false;
     }
-    Main.wm.setCustomKeybindingHandler('toggle-overview', 
+    Main.wm.setCustomKeybindingHandler('toggle-overview',
         Shell.ActionMode.NORMAL, Lang.bind(Main.overview, Main.overview.toggle));
     delete Main.overview._specialToggle;
     _visible = false;
@@ -83,30 +83,36 @@ function disable() {
 function _toggleShortcuts() {
     if (!_visible) {
         if (!stage) { // Show popup
-            stage = new St.BoxLayout({ style_class: 'background-boxlayout',
-                                  pack_start: false,
-                                  vertical: true });
-            panel_panel = new St.BoxLayout({ style_class: 'panel-boxlayout',
-                                  pack_start: false,
-                                  vertical: false});
+            stage = new St.BoxLayout({
+                style_class: 'background-boxlayout',
+                pack_start: false,
+                vertical: true
+            });
+            panel_panel = new St.BoxLayout({
+                style_class: 'panel-boxlayout',
+                pack_start: false,
+                vertical: false
+            });
 
             stage.add_actor(panel_panel);
 
             left_panel = new St.BoxLayout({
                 style_class: 'left-boxlayout',
                 pack_start: false,
-                vertical: true });
+                vertical: true
+            });
             right_panel = new St.BoxLayout({
                 style_class: 'right-boxlayout',
                 pack_start: false,
-                vertical: true });
+                vertical: true
+            });
             panel_panel.add_actor(left_panel);
             panel_panel.add_actor(right_panel);
 
             _readShortcuts();
 
-            stage.add_actor(new St.Label({ 
-                style_class: 'superkey-prompt', 
+            stage.add_actor(new St.Label({
+                style_class: 'superkey-prompt',
                 text: _("The super key is the Windows key on most keyboards")
             }));
 
@@ -116,20 +122,22 @@ function _toggleShortcuts() {
         let monitor = Main.layoutManager.primaryMonitor;
 
         stage.set_position(monitor.x + Math.floor(monitor.width / 2 - stage.width / 2),
-                          monitor.y + Math.floor(monitor.height / 2 - stage.height / 2));
+            monitor.y + Math.floor(monitor.height / 2 - stage.height / 2));
         _visible = true;
     } else { // Hide popup
         let current_version = Config.PACKAGE_VERSION.split('.');
-        if (current_version[0] = 3 && current_version[1] < 38){
+        if (current_version[0] = 3 && current_version[1] < 38) {
             const Tweener = imports.ui.tweener;
             Tweener.addTween(stage,
-                         { opacity: 0,
-                           time: 1,
-                           transition: 'easeOutQuad',
-                           onComplete: _hideShortcuts });
-                           }
-         else{
-         _hideShortcuts();
+                {
+                    opacity: 0,
+                    time: 1,
+                    transition: 'easeOutQuad',
+                    onComplete: _hideShortcuts
+                });
+        }
+        else {
+            _hideShortcuts();
         }
     }
 }
@@ -140,8 +148,8 @@ function _toggleShortcuts() {
  */
 function _readShortcuts() {
     let SHORTCUTS_FILE = this._settings.get_boolean('use-custom-shortcuts') ?
-            this._settings.get_string('shortcuts-file') :
-            Me.dir.get_child('shortcuts.json').get_path();
+        this._settings.get_string('shortcuts-file') :
+        Me.dir.get_child('shortcuts.json').get_path();
     if (!GLib.file_test(SHORTCUTS_FILE, GLib.FileTest.EXISTS)) {
         let msg = _("Shortcuts file not found: '%s'").format(SHORTCUTS_FILE);
         Main.notifyError(msg);
@@ -165,23 +173,24 @@ function _readShortcuts() {
     for (let i = 0; i < shortcuts.length; i++) {
         listProgress += shortcuts[i].shortcuts.length * 1.0 / shortcutLength;
         let panel = (listProgress < 0.5) ? left_panel : right_panel;
-        panel.add_actor(new St.Label({ 
-            style_class: 'shortcut-section', 
+        panel.add_actor(new St.Label({
+            style_class: 'shortcut-section',
             text: shortcuts[i].name
         }));
         for (let j = 0; j < shortcuts[i].shortcuts.length; j++) {
             let item_panel = new St.BoxLayout({
                 style_class: 'item-boxlayout',
                 pack_start: false,
-                vertical: false });
+                vertical: false
+            });
             let key = shortcuts[i].shortcuts[j].key;
-            let description = _(shortcuts[i].shortcuts[j].description); 
-            item_panel.add(new St.Label({ 
-                style_class: 'shortcut-key-label', 
+            let description = _(shortcuts[i].shortcuts[j].description);
+            item_panel.add(new St.Label({
+                style_class: 'shortcut-key-label',
                 text: key
             }));
-            item_panel.add(new St.Label({ 
-                style_class: 'shortcut-description-label', 
+            item_panel.add(new St.Label({
+                style_class: 'shortcut-description-label',
                 text: description
             }));
             panel.add_actor(item_panel);
@@ -217,14 +226,31 @@ function _toggleIcon() {
         }
         return;
     }
-    button = new St.Bin({ style_class: 'panel-button',
-                          reactive: true,
-                          can_focus: true,
-                          x_expand: true,
-                          y_expand: false,
-                          track_hover: true });
-    let icon = new St.Icon({ icon_name: 'preferences-desktop-keyboard-shortcuts-symbolic',
-                             style_class: 'system-status-icon' });
+    let current_version = Config.PACKAGE_VERSION.split('.');
+    if (current_version[0] = 3 && current_version[1] < 38) {
+        button = new St.Bin({
+            style_class: 'panel-button',
+            reactive: true,
+            can_focus: true,
+            x_fill: true,
+            y_fill: false,
+            track_hover: true
+        });
+    }
+    else {
+        button = new St.Bin({
+            style_class: 'panel-button',
+            reactive: true,
+            can_focus: true,
+            x_expand: true,
+            y_expand: false,
+            track_hover: true
+        });
+    }
+    let icon = new St.Icon({
+        icon_name: 'preferences-desktop-keyboard-shortcuts-symbolic',
+        style_class: 'system-status-icon'
+    });
 
     button.set_child(icon);
     button.connect('button-press-event', _toggleShortcuts);
@@ -238,7 +264,7 @@ function _toggleIcon() {
  */
 function _setShortcutsFile() {
     if (!this._settings.get_boolean('use-custom-shortcuts')) {
-        this._settings.set_string('shortcuts-file', 
+        this._settings.set_string('shortcuts-file',
             Me.dir.get_child('shortcuts.json').get_path());
     }
 }
