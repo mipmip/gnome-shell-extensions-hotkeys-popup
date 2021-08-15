@@ -141,10 +141,7 @@ function _toggleShortcuts() {
   } else {
     // Hide popup
     let current_version = Config.PACKAGE_VERSION.split(".");
-    if (
-      (current_version[0] =
-        3 && current_version[1] < 38 && current_version[0] < 40)
-    ) {
+    if (current_version[0] == 3 && current_version[1] < 38) {
       const Tweener = imports.ui.tweener;
       Tweener.addTween(stage, {
         opacity: 0,
@@ -250,10 +247,7 @@ function _toggleIcon() {
   }
   if (!_isAdded) {
     let current_version = Config.PACKAGE_VERSION.split(".");
-    if (
-      (current_version[0] =
-        3 && current_version[1] < 38 && current_version[0] < 40)
-    ) {
+    if (current_version[0] == 3 && current_version[1] < 38) {
       button = new St.Bin({
         style_class: "panel-button",
         reactive: true,
