@@ -21,7 +21,6 @@ const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 
 const Gettext = imports.gettext;
-const Lang = imports.lang;
 const Mainloop = imports.mainloop;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -43,13 +42,10 @@ let _isAdded, _visible;
 function init() {
   Convenience.initTranslations();
   this._settings = Convenience.getSettings();
-  this._settings.connect(
-    "changed::show-icon",
-    Lang.bind(this, this._toggleIcon)
-  );
+  this._settings.connect("changed::show-icon", this._toggleIcon.bind(this));
   this._settings.connect(
     "changed::use-custom-shortcuts",
-    Lang.bind(this, this._setShortcutsFile)
+    this._setShortcutsFile.bind(this)
   );
   _isAdded = false;
 }
@@ -64,7 +60,7 @@ function enable() {
   Main.wm.setCustomKeybindingHandler(
     "toggle-overview",
     Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
-    Lang.bind(Main.overview, Main.overview._specialToggle)
+    Main.overview._specialToggle.bind(this, Main.overview)
   );
   _toggleIcon();
 }
@@ -80,7 +76,7 @@ function disable() {
   Main.wm.setCustomKeybindingHandler(
     "toggle-overview",
     Shell.ActionMode.NORMAL,
-    Lang.bind(Main.overview, Main.overview.toggle)
+    Main.overview.toggle.bind(this, Main.overview)
   );
   delete Main.overview._specialToggle;
   _visible = false;
