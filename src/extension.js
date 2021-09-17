@@ -84,16 +84,25 @@ function disable() {
  * Builds the pop-up and shows the shortcut description list
  */
 function _toggleShortcuts() {
+  if(!this._settings){
+    this._settings = Convenience.getSettings();
+  }
   if (!_visible) {
     if (!stage) {
       // Show popup
 
+      let background_class = "background-boxlayout";
+      if (this._settings.get_boolean("transparent-popup")) {
+        background_class = "background-boxlayout-transparent";
+      }
 
       stage = new St.BoxLayout({
-        style_class: "background-boxlayout",
+        style_class: background_class,
         pack_start: false,
         vertical: true,
       });
+
+
       panel_panel = new St.BoxLayout({
         style_class: "panel-boxlayout",
         pack_start: false,
