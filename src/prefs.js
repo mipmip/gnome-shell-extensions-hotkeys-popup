@@ -23,6 +23,7 @@ const Gtk = imports.gi.Gtk;
 const Lang = imports.lang;
 const Gettext = imports.gettext;
 const _ = Gettext.gettext;
+const Config = imports.misc.config;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -40,7 +41,12 @@ function init() {
  */
 function buildPrefsWidget() {
     let widget = new ShortcutsPrefsWidget();
-    widget.show_all();
+
+    let current_version = Config.PACKAGE_VERSION.split(".");
+    if (current_version[0] == 3 && current_version[1] < 38) {
+        widget.show_all();
+    }
+
     return widget;
 }
 
@@ -69,6 +75,8 @@ const ShortcutsPrefsWidget = new GObject.Class({
         this.attach(this.customShortcutsFileCheckButton, 0, 0, 2, 1);
         this._settings.bind('use-custom-shortcuts', this.customShortcutsFileCheckButton,
                                         'active', Gio.SettingsBindFlags.DEFAULT);
+
+        /*
         this.shortcutsFile = new Gtk.FileChooserButton ({
                                         title: _("Select shortcut file"),
                                         action: Gtk.FileChooserAction.OPEN });
@@ -81,6 +89,7 @@ const ShortcutsPrefsWidget = new GObject.Class({
             this._settings.set_string('shortcuts-file', path);
         }));
         this.attach(this.shortcutsFile, 3, 0, 1, 1);
+        */
 
         let showIconCheckButton = new Gtk.CheckButton({ label: _("Show tray icon"),
                                                         margin_top: 6 });
