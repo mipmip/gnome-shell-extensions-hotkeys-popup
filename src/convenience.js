@@ -75,7 +75,7 @@ function getSettings(schema) {
 
     let schemaObj = schemaSource.lookup(schema, true);
     if (!schemaObj) {
-        global.log("Unable to find schema " + schema + " for extention " + extension.metadata.uuid);
+        log("Unable to find schema " + schema + " for extention " + extension.metadata.uuid);
         return undefined;
     }
     return new Gio.Settings({ settings_schema: schemaObj });

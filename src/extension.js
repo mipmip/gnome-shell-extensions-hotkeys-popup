@@ -1,18 +1,18 @@
 /*********************************************************************
- * Shortcuts is Copyright (C) 2016-2018 Kyle Robbertze
+ * Hotkeys Popup is Copyright (C) 2016-2018 Kyle Robbertze
  * African Institute for Mathematical Sciences, South Africa
  *
- * Shortcuts is free software: you can redistribute it and/or modify
+ * Hotkeys Popup is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
  * published by the Free Software Foundation.
  *
- * Shortcuts is distributed in the hope that it will be useful,
+ * Hotkeys Popup is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Shortcuts.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Hotkeys Popup.  If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
 const GLib = imports.gi.GLib;
