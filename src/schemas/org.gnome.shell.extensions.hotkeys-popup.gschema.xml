@@ -15,5 +15,10 @@
       <summary>Toggles the icon on the top panel</summary>
       <description>If true an icon to activate the extension will be visible on the top panel.</description>
     </key>
+    <key name="transparent-popup" type="b">
+      <default>false</default>
+      <summary>Toggles the transparency of the cheatsheet popup</summary>
+      <description>Toggles the transparency of the cheatsheet popup.</description>
+    </key>
   </schema>
 </schemalist>

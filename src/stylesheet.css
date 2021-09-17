@@ -1,6 +1,12 @@
-.background-boxlayout {
+.background-boxlayout_transparent {
     color: #ffffff;
     background-color: rgba(10,10,10,0.7);
+    border-radius: 10px;
+}
+
+.background-boxlayout {
+    color: #ffffff;
+    background-color: rgba(10,10,10,1);
     border-radius: 10px;
 }
 

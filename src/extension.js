@@ -42,11 +42,9 @@ let _isAdded, _visible;
 function init() {
   Convenience.initTranslations();
   this._settings = Convenience.getSettings();
-  this._settings.connect("changed::show-icon", this._toggleIcon.bind(this));
-  this._settings.connect(
-    "changed::use-custom-shortcuts",
-    this._setShortcutsFile.bind(this)
-  );
+  this._settings.connect("changed::show-icon",            this._toggleIcon.bind(this));
+  this._settings.connect("changed::use-custom-shortcuts", this._setShortcutsFile.bind(this) );
+  this._settings.connect("changed::transparent-popup",    this._setTranparency.bind(this) );
   _isAdded = false;
 }
 
@@ -89,6 +87,8 @@ function _toggleShortcuts() {
   if (!_visible) {
     if (!stage) {
       // Show popup
+
+
       stage = new St.BoxLayout({
         style_class: "background-boxlayout",
         pack_start: false,
@@ -284,5 +284,14 @@ function _setShortcutsFile() {
       "shortcuts-file",
       Me.dir.get_child("shortcuts.json").get_path()
     );
+  }
+}
+
+function _setTranparency() {
+  if (this._settings.get_boolean("transparent-popup")) {
+    log("trans yes");
+  }
+  else{
+    log("trans no");
   }
 }
