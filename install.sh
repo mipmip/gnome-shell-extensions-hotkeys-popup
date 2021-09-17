@@ -37,6 +37,8 @@ function make-local-install {
     fi
     cp -r src/* locale $DEST/
 
+    busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.restart("Restarting…")'
+
     echo 'Done'
 }
 
