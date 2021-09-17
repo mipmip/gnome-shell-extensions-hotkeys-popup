@@ -7,7 +7,7 @@ if [ "$UID" = "0" ]; then
     exit 101
 fi
 
-NAME=Shortcuts\@kyle.aims.ac.za
+NAME=hotkeys-popup\@pimsnel.com
 
 function compile-translations {
     echo 'Compiling translations...'
@@ -57,8 +57,8 @@ function make-zip {
     echo 'Done'
 }
 
-function useage() {
-    echo 'Useage: ./install.sh COMMAND'
+function usage() {
+    echo 'Usage: ./install.sh COMMAND'
     echo 'COMMAND:'
     echo "  local-install  install the extension in the user's home directory"
     echo '                 under ~/.local'
@@ -75,7 +75,7 @@ case "$1" in
         ;;
 
     * )
-        useage
+        usage
         ;;
 esac
 exit
