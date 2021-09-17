@@ -88,62 +88,9 @@ function _toggleShortcuts() {
     this._settings = Convenience.getSettings();
   }
   if (!_visible) {
-    if (!stage) {
-      // Show popup
-
-      let background_class = "background-boxlayout";
-      if (this._settings.get_boolean("transparent-popup")) {
-        background_class = "background-boxlayout-transparent";
-      }
-
-      stage = new St.BoxLayout({
-        style_class: background_class,
-        pack_start: false,
-        vertical: true,
-      });
-
-
-      panel_panel = new St.BoxLayout({
-        style_class: "panel-boxlayout",
-        pack_start: false,
-        vertical: false,
-      });
-
-      stage.add_actor(panel_panel);
-
-      left_panel = new St.BoxLayout({
-        style_class: "left-boxlayout",
-        pack_start: false,
-        vertical: true,
-      });
-      right_panel = new St.BoxLayout({
-        style_class: "right-boxlayout",
-        pack_start: false,
-        vertical: true,
-      });
-      panel_panel.add_actor(left_panel);
-      panel_panel.add_actor(right_panel);
-
-      _readShortcuts();
-
-      stage.add_actor(
-        new St.Label({
-          style_class: "superkey-prompt",
-          text: _("The super key is the Windows key on most keyboards"),
-        })
-      );
-
-      Main.uiGroup.add_actor(stage);
-    }
-
-    let monitor = Main.layoutManager.primaryMonitor;
-
-    stage.set_position(
-      monitor.x + Math.floor(monitor.width / 2 - stage.width / 2),
-      monitor.y + Math.floor(monitor.height / 2 - stage.height / 2)
-    );
-    _visible = true;
+    _showPopup();
   } else {
+
     // Hide popup
     let current_version = Config.PACKAGE_VERSION.split(".");
     if (current_version[0] == 3 && current_version[1] < 38) {
@@ -152,12 +99,55 @@ function _toggleShortcuts() {
         opacity: 0,
         time: 1,
         transition: "easeOutQuad",
-        onComplete: _hideShortcuts,
+        onComplete: _hidePopup,
       });
     } else {
-      _hideShortcuts();
+      _hidePopup();
     }
   }
+}
+
+// Combines the benefits of spawn_sync (easy retrieval of output)
+// with those of spawn_async (non-blocking execution).
+// Based on https://github.com/optimisme/gjs-examples/blob/master/assets/spawn.js.
+function spawnWithCallback(workingDirectory, argv, envp, flags, childSetup, callback) {
+  let [success, pid, stdinFile, stdoutFile, stderrFile] = GLib.spawn_async_with_pipes(
+    workingDirectory, argv, envp, flags, childSetup);
+
+  if (!success)
+    return;
+
+  GLib.close(stdinFile);
+  GLib.close(stderrFile);
+
+  let standardOutput = "";
+
+  let stdoutStream = new Gio.DataInputStream({
+    base_stream: new Gio.UnixInputStream({
+      fd: stdoutFile
+    })
+  });
+
+  readStream(stdoutStream, function(output) {
+    if (output === null) {
+      stdoutStream.close(null);
+      callback(standardOutput);
+    } else {
+      standardOutput += output;
+    }
+  });
+}
+function readStream(stream, callback) {
+  stream.read_line_async(GLib.PRIORITY_LOW, null, function(source, result) {
+    let [line] = source.read_line_finish(result);
+
+    if (line === null) {
+      callback(null);
+    } else {
+      callback(imports.byteArray.toString(line) + "\n");
+      readStream(source, callback);
+    }
+  });
 }
 
 /**
@@ -165,67 +155,157 @@ function _toggleShortcuts() {
  * there then it defaults to the shortcuts file provided by the extension.
  */
 function _readShortcuts() {
-  let SHORTCUTS_FILE = this._settings.get_boolean("use-custom-shortcuts")
-    ? this._settings.get_string("shortcuts-file")
-    : Me.dir.get_child("shortcuts.json").get_path();
-  if (!GLib.file_test(SHORTCUTS_FILE, GLib.FileTest.EXISTS)) {
-    let msg = _("Shortcuts file not found: '%s'").format(SHORTCUTS_FILE);
-    Main.notifyError(msg);
-    return;
-  }
-  let file = Gio.file_new_for_path(SHORTCUTS_FILE);
-  let [result, contents] = file.load_contents(null);
-  if (!result) {
-    let msg = _("Unable to read file: '%s'").format(SHORTCUTS_FILE);
-    Main.notifyError(msg);
-    return;
-  }
 
-  let shortcuts = JSON.parse(contents);
-  let shortcutLength = shortcuts.length;
-  for (let i = 0; i < shortcuts.length; i++) {
-    shortcutLength += shortcuts[i].shortcuts.length;
-  }
+  let scriptPath = Me.dir.get_child("listkeys.sh").get_path();
 
-  let listProgress = 0.0;
-  for (let i = 0; i < shortcuts.length; i++) {
-    listProgress += (shortcuts[i].shortcuts.length * 1.0) / shortcutLength;
-    let panel = listProgress < 0.5 ? left_panel : right_panel;
-    panel.add_actor(
+  shortcutsAll = [];
+  let shortcutSection= {
+    name: "desktop.wm",
+    shortcuts: []
+  };
+
+  spawnWithCallback(null, [scriptPath],  null, GLib.SpawnFlags.SEARCH_PATH, null, function(standardOutput){
+    let lines = standardOutput.split(/\r?\n/);
+    lines.forEach(function(line){
+      if(line.trim() == ""){
+        log('empty');
+      }
+      let entry = line.split(" ");
+      let shortCutEntry = {
+        description: entry[1],
+        key: entry[2]
+      };
+      shortcutSection.shortcuts.push(shortCutEntry);
+    });
+
+    shortcutsAll.push(shortcutSection);
+    log(shortcutsAll);
+
+    //org.gnome.desktop.wm.keybindings
+
+    let SHORTCUTS_FILE = this._settings.get_boolean("use-custom-shortcuts")
+      ? this._settings.get_string("shortcuts-file")
+      : Me.dir.get_child("shortcuts.json").get_path();
+    if (!GLib.file_test(SHORTCUTS_FILE, GLib.FileTest.EXISTS)) {
+      let msg = _("Shortcuts file not found: '%s'").format(SHORTCUTS_FILE);
+      Main.notifyError(msg);
+      return;
+    }
+    let file = Gio.file_new_for_path(SHORTCUTS_FILE);
+    let [result, contents] = file.load_contents(null);
+    if (!result) {
+      let msg = _("Unable to read file: '%s'").format(SHORTCUTS_FILE);
+      Main.notifyError(msg);
+      return;
+    }
+
+    //let shortcuts = JSON.parse(contents);
+    let shortcuts = shortcutsAll;
+    let shortcutLength = shortcuts.length;
+    for (let i = 0; i < shortcuts.length; i++) {
+      shortcutLength += shortcuts[i].shortcuts.length;
+    }
+
+    let listProgress = 0.0;
+    for (let i = 0; i < shortcuts.length; i++) {
+      listProgress += (shortcuts[i].shortcuts.length * 1.0) / shortcutLength;
+      let panel = listProgress < 0.5 ? left_panel : right_panel;
+      panel.add_actor(
+        new St.Label({
+          style_class: "shortcut-section",
+          text: shortcuts[i].name,
+        })
+      );
+      for (let j = 0; j < shortcuts[i].shortcuts.length; j++) {
+        let item_panel = new St.BoxLayout({
+          style_class: "item-boxlayout",
+          pack_start: false,
+          vertical: false,
+        });
+        let key = shortcuts[i].shortcuts[j].key;
+        let description = _(shortcuts[i].shortcuts[j].description);
+        item_panel.add(
+          new St.Label({
+            style_class: "shortcut-key-label",
+            text: key,
+          })
+        );
+        item_panel.add(
+          new St.Label({
+            style_class: "shortcut-description-label",
+            text: description,
+          })
+        );
+        panel.add_actor(item_panel);
+      }
+    }
+
+
+  });
+}
+
+function _showPopup(){
+  if (!stage) {
+    // Show popup
+
+    let background_class = "background-boxlayout";
+    if (this._settings.get_boolean("transparent-popup")) {
+      background_class = "background-boxlayout-transparent";
+    }
+
+    stage = new St.BoxLayout({
+      style_class: background_class,
+      pack_start: false,
+      vertical: true,
+    });
+
+
+    panel_panel = new St.BoxLayout({
+      style_class: "panel-boxlayout",
+      pack_start: false,
+      vertical: false,
+    });
+
+    stage.add_actor(panel_panel);
+
+    left_panel = new St.BoxLayout({
+      style_class: "left-boxlayout",
+      pack_start: false,
+      vertical: true,
+    });
+    right_panel = new St.BoxLayout({
+      style_class: "right-boxlayout",
+      pack_start: false,
+      vertical: true,
+    });
+    panel_panel.add_actor(left_panel);
+    panel_panel.add_actor(right_panel);
+
+    _readShortcuts();
+
+    stage.add_actor(
       new St.Label({
-        style_class: "shortcut-section",
-        text: shortcuts[i].name,
+        style_class: "superkey-prompt",
+        text: _("The super key is the Windows key on most keyboards"),
       })
     );
-    for (let j = 0; j < shortcuts[i].shortcuts.length; j++) {
-      let item_panel = new St.BoxLayout({
-        style_class: "item-boxlayout",
-        pack_start: false,
-        vertical: false,
-      });
-      let key = shortcuts[i].shortcuts[j].key;
-      let description = _(shortcuts[i].shortcuts[j].description);
-      item_panel.add(
-        new St.Label({
-          style_class: "shortcut-key-label",
-          text: key,
-        })
-      );
-      item_panel.add(
-        new St.Label({
-          style_class: "shortcut-description-label",
-          text: description,
-        })
-      );
-      panel.add_actor(item_panel);
-    }
+
+    Main.uiGroup.add_actor(stage);
   }
+
+  let monitor = Main.layoutManager.primaryMonitor;
+
+  stage.set_position(
+    monitor.x + Math.floor(monitor.width / 2 - stage.width / 2),
+    monitor.y + Math.floor(monitor.height / 2 - stage.height / 2)
+  );
+  _visible = true;
 }
 
 /**
  * Removes the actors used to make the pop-up describing the shortcuts.
  */
-function _hideShortcuts() {
+function _hidePopup() {
   panel_panel.remove_actor(left_panel);
   panel_panel.remove_actor(right_panel);
   stage.remove_actor(panel_panel);
