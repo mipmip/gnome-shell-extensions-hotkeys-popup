@@ -42,7 +42,6 @@ let _isAdded, _visible;
  * Initialises the plugin.
  */
 function init() {
-  log("initFunction");
   Convenience.initTranslations();
   this._settings = Convenience.getSettings();
   this._settings.connect("changed::show-icon",            this._toggleIcon.bind(this));
@@ -56,7 +55,6 @@ function init() {
  */
 function enable() {
 
-  log("enableFunction");
 
   Main.overview._specialToggle = function (evt) {
     _toggleShortcuts();
@@ -220,22 +218,26 @@ function _readShortcuts() {
           shortcutSection.shortcuts.push(shortCutEntry);
         }
       }
-      else{
-        log('empty');
-      }
     });
 
     shortcutsAll.push(shortcutSection);
-    log(shortcutsAll);
 
+    if(!this._settings){
+      this._settings = Convenience.getSettings();
+    }
+
+    //OLD CODE TO READ JSON WITH SHORTCUTS
+    /*
     let SHORTCUTS_FILE = this._settings.get_boolean("use-custom-shortcuts")
       ? this._settings.get_string("shortcuts-file")
       : Me.dir.get_child("shortcuts.json").get_path();
+
     if (!GLib.file_test(SHORTCUTS_FILE, GLib.FileTest.EXISTS)) {
       let msg = _("Shortcuts file not found: '%s'").format(SHORTCUTS_FILE);
       Main.notifyError(msg);
       return;
     }
+
     let file = Gio.file_new_for_path(SHORTCUTS_FILE);
     let [result, contents] = file.load_contents(null);
     if (!result) {
@@ -245,6 +247,8 @@ function _readShortcuts() {
     }
 
     //let shortcuts = JSON.parse(contents);
+    */
+
     let shortcuts = shortcutsAll;
     let shortcutLength = shortcuts.length;
     for (let i = 0; i < shortcuts.length; i++) {
@@ -303,13 +307,9 @@ var PopupBox = GObject.registerClass({
     vfunc_key_press_event(event) {
 
       switch(event.keyval) {
-        case Clutter.KEY_Escape:
-          this.emit('hide-box');
-          log("hide box")
-          return Clutter.EVENT_PROPAGATE;
         default:
           this.emit('hide-box');
-          log("hide box")
+          return Clutter.EVENT_PROPAGATE;
       }
 
       return super.vfunc_key_press_event(event);
@@ -368,7 +368,6 @@ function _showPopup(){
 
     Main.pushModal(stage, { actionMode: Shell.ActionMode.NORMAL });
     Main.layoutManager.addTopChrome(stage);
-    //Main.uiGroup.add_actor(stage);
   }
 
 
@@ -396,8 +395,6 @@ function _hidePopup() {
   panel_panel.remove_actor(right_panel);
   stage.remove_actor(panel_panel);
   stage.remove_actor(super_label);
-  //Main.uiGroup.remove_actor(stage);
-  log("should be closed now")
 
   left_panel = null;
   right_panel = null;

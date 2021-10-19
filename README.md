@@ -3,6 +3,11 @@
 Hotkeys Popup is a GNOME Shell Extension that displays currently configured
 Gnome hotkeys in a popup. The popup is activated with <kbd>Super + S</kbd>.
 
+*Only tested with Gnome 40*. It might run correctly with other versions.
+
+Currently it only shows some of the window manager shortcuts. In the future
+versions it should show personally configured shortcuts.
+
 ## Features/Todo
 
 ### Version 1 WIP
@@ -10,23 +15,33 @@ Gnome hotkeys in a popup. The popup is activated with <kbd>Super + S</kbd>.
 - [x] Shows popup with hotkeys
 - [x] works with Gnome 40
 - [x] transparency optional
-- [ ] retrieve keybindings from Gsettings not a json file
+- [x] retrieve keybindings from Gsettings not a json file
   - [x] get extdir
   - [x] parse gsettings output
-  - [ ] map gsettings to paragraphs
-- [ ] fix window position
+- [x] fix window position
+- [x] escape should also close the popup
+- [x] hardcoded hide shortcuts
 
-### Version 2
+### Next
 
+- [ ] get keys without shellscript
+- [ ] map gsettings to paragraphs
 - [ ] autohide
 - [ ] localized
 - [ ] configure scope of keybinding app
 - [ ] configure toggle keybinding
-- [ ] escape should also close the popup
+- [ ] preferences add shortcuts from other Gnome apps
+- [ ] preferences add shortcuts from other Apps
+- [ ] preferences detect currently running application and show it's shortcuts.
+  - [ ] inkspace
+  - [ ] vim
+  - [ ] tmux
+- [ ] preferences hide description array
 
 ## Credits
 
 The idea of having an up to date hotkey popup window comes from AwesomeWM.
+
 This extension is initially forked from [Shortcuts]
 (https://gitlab.com/paddatrapper/shortcuts-gnome-extension).
 
