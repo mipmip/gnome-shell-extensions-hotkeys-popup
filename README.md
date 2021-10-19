@@ -14,6 +14,7 @@ Gnome hotkeys in a popup. The popup is activated with <kbd>Super + S</kbd>.
   - [x] get extdir
   - [x] parse gsettings output
   - [ ] map gsettings to paragraphs
+- [ ] fix window position
 
 ### Version 2
 

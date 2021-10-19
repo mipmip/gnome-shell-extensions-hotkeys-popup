@@ -16,9 +16,11 @@
  **********************************************************************/
 
 const GLib = imports.gi.GLib;
+const GObject = imports.gi.GObject;
 const Gio = imports.gi.Gio;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
+const Clutter = imports.gi.Clutter;
 
 const Gettext = imports.gettext;
 const Mainloop = imports.mainloop;
@@ -33,13 +35,14 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience;
 const _ = Gettext.gettext;
 
-let button, stage, panel_panel, left_panel, right_panel;
+let button, stage, panel_panel, left_panel, right_panel, super_label;
 let _isAdded, _visible;
 
 /**
  * Initialises the plugin.
  */
 function init() {
+  log("initFunction");
   Convenience.initTranslations();
   this._settings = Convenience.getSettings();
   this._settings.connect("changed::show-icon",            this._toggleIcon.bind(this));
@@ -52,16 +55,22 @@ function init() {
  * Enables the plugin by adding listeners and icons as necessary
  */
 function enable() {
+
+  log("enableFunction");
+
   Main.overview._specialToggle = function (evt) {
     _toggleShortcuts();
   };
+
   Main.wm.setCustomKeybindingHandler(
     "toggle-overview",
     Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
     Main.overview._specialToggle.bind(this, Main.overview)
   );
+
   _toggleIcon();
 }
+
 
 /**
  * Removes all traces of the listeners and icons that the extension created
@@ -150,11 +159,44 @@ function readStream(stream, callback) {
   });
 }
 
+function _normalize_description(str) {
+  str = str.replaceAll("-", " ");
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+function _normalize_key(str) {
+  return str.replace("['","").replace("']","").replaceAll(",","").replaceAll("'","");
+}
+
 /**
  * Reads the shortcuts from a file specified in the settings. If this is not
  * there then it defaults to the shortcuts file provided by the extension.
  */
 function _readShortcuts() {
+
+  let hideArray = [
+    "cycle-group",
+    "cycle-group-backward",
+    "cycle-panels",
+    "cycle-panels-backward",
+    "cycle-windows-backward",
+    "panel-main-menu",
+    "move-to-monitor-down",
+    "move-to-monitor-up",
+    "move-to-workspace-down",
+    "move-to-workspace-up",
+    "move-to-workspace-last",
+    "move-to-workspace-left",
+    "move-to-workspace-right",
+    "switch-panels",
+    "switch-panels-backward",
+    "switch-group",
+    "switch-group-backward",
+    "switch-to-workspace-down",
+    "switch-to-workspace-up",
+    "switch-to-workspace-left",
+    "switch-to-workspace-right",
+    "toggle-maximized",
+  ];
 
   let scriptPath = Me.dir.get_child("listkeys.sh").get_path();
 
@@ -167,21 +209,24 @@ function _readShortcuts() {
   spawnWithCallback(null, [scriptPath],  null, GLib.SpawnFlags.SEARCH_PATH, null, function(standardOutput){
     let lines = standardOutput.split(/\r?\n/);
     lines.forEach(function(line){
-      if(line.trim() == ""){
+      if(line.trim() !== ""){
+        let entry = line.split(" ");
+
+        if(!hideArray.includes(entry[1])){
+          let shortCutEntry = {
+            description: _normalize_description(entry[1]),
+            key: _normalize_key(entry[2])
+          };
+          shortcutSection.shortcuts.push(shortCutEntry);
+        }
+      }
+      else{
         log('empty');
       }
-      let entry = line.split(" ");
-      let shortCutEntry = {
-        description: entry[1],
-        key: entry[2]
-      };
-      shortcutSection.shortcuts.push(shortCutEntry);
     });
 
     shortcutsAll.push(shortcutSection);
     log(shortcutsAll);
-
-    //org.gnome.desktop.wm.keybindings
 
     let SHORTCUTS_FILE = this._settings.get_boolean("use-custom-shortcuts")
       ? this._settings.get_string("shortcuts-file")
@@ -208,6 +253,7 @@ function _readShortcuts() {
 
     let listProgress = 0.0;
     for (let i = 0; i < shortcuts.length; i++) {
+
       listProgress += (shortcuts[i].shortcuts.length * 1.0) / shortcutLength;
       let panel = listProgress < 0.5 ? left_panel : right_panel;
       panel.add_actor(
@@ -216,6 +262,7 @@ function _readShortcuts() {
           text: shortcuts[i].name,
         })
       );
+
       for (let j = 0; j < shortcuts[i].shortcuts.length; j++) {
         let item_panel = new St.BoxLayout({
           style_class: "item-boxlayout",
@@ -240,9 +287,35 @@ function _readShortcuts() {
       }
     }
 
+    centerBox();
 
   });
 }
+
+
+var PopupBox = GObject.registerClass({
+  Signals: {
+    'hide-box': {},
+  },
+},
+  class PopupBox extends St.BoxLayout{
+
+    vfunc_key_press_event(event) {
+
+      switch(event.keyval) {
+        case Clutter.KEY_Escape:
+          this.emit('hide-box');
+          log("hide box")
+          return Clutter.EVENT_PROPAGATE;
+        default:
+          this.emit('hide-box');
+          log("hide box")
+      }
+
+      return super.vfunc_key_press_event(event);
+    }
+  }
+);
 
 function _showPopup(){
   if (!stage) {
@@ -253,12 +326,13 @@ function _showPopup(){
       background_class = "background-boxlayout-transparent";
     }
 
-    stage = new St.BoxLayout({
+    stage = new PopupBox({
       style_class: background_class,
       pack_start: false,
       vertical: true,
     });
 
+    stage.hideId = stage.connect('hide-box', _hidePopup);
 
     panel_panel = new St.BoxLayout({
       style_class: "panel-boxlayout",
@@ -273,46 +347,63 @@ function _showPopup(){
       pack_start: false,
       vertical: true,
     });
+
     right_panel = new St.BoxLayout({
       style_class: "right-boxlayout",
       pack_start: false,
       vertical: true,
     });
+
     panel_panel.add_actor(left_panel);
     panel_panel.add_actor(right_panel);
 
     _readShortcuts();
 
-    stage.add_actor(
-      new St.Label({
-        style_class: "superkey-prompt",
-        text: _("The super key is the Windows key on most keyboards"),
-      })
-    );
+    super_label = new St.Label({
+      style_class: "superkey-prompt",
+      text: _("The super key is the Windows key on most keyboards"),
+    })
 
-    Main.uiGroup.add_actor(stage);
+    stage.add_actor( super_label);
+
+    Main.pushModal(stage, { actionMode: Shell.ActionMode.NORMAL });
+    Main.layoutManager.addTopChrome(stage);
+    //Main.uiGroup.add_actor(stage);
   }
 
-  let monitor = Main.layoutManager.primaryMonitor;
 
+  _visible = true;
+}
+
+function centerBox(){
+  let monitor = Main.layoutManager.primaryMonitor;
   stage.set_position(
     monitor.x + Math.floor(monitor.width / 2 - stage.width / 2),
-    monitor.y + Math.floor(monitor.height / 2 - stage.height / 2)
+    monitor.y + Math.floor(monitor.height / 2 - stage.height / 2 )
   );
-  _visible = true;
 }
 
 /**
  * Removes the actors used to make the pop-up describing the shortcuts.
  */
 function _hidePopup() {
+
+  if(stage.hideId) {
+    stage.disconnect(stage.hideId);
+    delete stage.hideId;
+  }
   panel_panel.remove_actor(left_panel);
   panel_panel.remove_actor(right_panel);
   stage.remove_actor(panel_panel);
-  Main.uiGroup.remove_actor(stage);
+  stage.remove_actor(super_label);
+  //Main.uiGroup.remove_actor(stage);
+  log("should be closed now")
+
   left_panel = null;
   right_panel = null;
   panel_panel = null;
+  super_label = null;
+  stage.destroy();
   stage = null;
   _visible = false;
 }
