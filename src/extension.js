@@ -1,6 +1,5 @@
 /*********************************************************************
- * Hotkeys Popup is Copyright (C) 2016-2018 Kyle Robbertze
- * African Institute for Mathematical Sciences, South Africa
+ * Hotkeys Popup is Copyright (C) 2021 Pim Snel
  *
  * Hotkeys Popup is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -43,11 +42,6 @@ let _isAdded, _visible;
  */
 function init() {
   Convenience.initTranslations();
-  this._settings = Convenience.getSettings();
-  this._settings.connect("changed::show-icon",            this._toggleIcon.bind(this));
-  this._settings.connect("changed::use-custom-shortcuts", this._setShortcutsFile.bind(this) );
-  this._settings.connect("changed::transparent-popup",    this._setTranparency.bind(this) );
-  _isAdded = false;
 }
 
 /*
@@ -55,6 +49,11 @@ function init() {
  */
 function enable() {
 
+  this._settings = Convenience.getSettings();
+  this._settings.connect("changed::show-icon",            this._toggleIcon.bind(this));
+  this._settings.connect("changed::use-custom-shortcuts", this._setShortcutsFile.bind(this) );
+  this._settings.connect("changed::transparent-popup",    this._setTranparency.bind(this) );
+  _isAdded = false;
 
   Main.overview._specialToggle = function (evt) {
     _toggleShortcuts();
@@ -165,6 +164,16 @@ function _normalize_key(str) {
   return str.replace("['","").replace("']","").replaceAll(",","").replaceAll("'","");
 }
 
+function _translateSchemaNames(schema){
+
+  let translations = {
+    "org.gnome.shell.keybindings": "Shell",
+    "org.gnome.desktop.wm.keybindings": "Window Manager"
+  }
+
+  return translations[schema];
+}
+
 /**
  * Reads the shortcuts from a file specified in the settings. If this is not
  * there then it defaults to the shortcuts file provided by the extension.
@@ -199,32 +208,44 @@ function _readShortcuts() {
   let scriptPath = Me.dir.get_child("listkeys.sh").get_path();
 
   shortcutsAll = [];
-  let shortcutSection= {
-    name: "desktop.wm",
-    shortcuts: []
-  };
+  let shortcutsTemp = {};
 
   spawnWithCallback(null, [scriptPath],  null, GLib.SpawnFlags.SEARCH_PATH, null, function(standardOutput){
-    let lines = standardOutput.split(/\r?\n/);
-    lines.forEach(function(line){
-      if(line.trim() !== ""){
-        let entry = line.split(" ");
-
-        if(!hideArray.includes(entry[1])){
-          let shortCutEntry = {
-            description: _normalize_description(entry[1]),
-            key: _normalize_key(entry[2])
-          };
-          shortcutSection.shortcuts.push(shortCutEntry);
-        }
-      }
-    });
-
-    shortcutsAll.push(shortcutSection);
 
     if(!this._settings){
       this._settings = Convenience.getSettings();
     }
+
+    let lines = standardOutput.split(/\r?\n/);
+
+    lines.forEach(function(line){
+
+      if(line.trim() !== ""){
+        let entry = line.split(" ");
+
+        if(!hideArray.includes(entry[1])){
+
+          if(!shortcutsTemp[entry[0]]){
+            shortcutsTemp[entry[0]] = [];
+          }
+
+          let shortCutEntry = {
+            description: _normalize_description(entry[1]),
+            key: _normalize_key(entry[2])
+          };
+
+          shortcutsTemp[entry[0]].push(shortCutEntry);
+        }
+      }
+    });
+
+    Object.keys(shortcutsTemp).forEach(function(section){
+
+      shortcutsAll.push({
+        name: _translateSchemaNames(section),
+        shortcuts: shortcutsTemp[section],
+      });
+    });
 
     //OLD CODE TO READ JSON WITH SHORTCUTS
     /*
