@@ -20,5 +20,34 @@
       <summary>Toggles the transparency of the cheatsheet popup</summary>
       <description>Toggles the transparency of the cheatsheet popup.</description>
     </key>
-  </schema>
+    <key name="hide-array" type="as">
+      <default>[
+        'cycle-group',
+        'cycle-group-backward',
+        'cycle-panels',
+        'cycle-panels-backward',
+        'cycle-windows-backward',
+        'panel-main-menu',
+        'move-to-monitor-down',
+        'move-to-monitor-up',
+        'move-to-workspace-down',
+        'move-to-workspace-up',
+        'move-to-workspace-last',
+        'move-to-workspace-left',
+        'move-to-workspace-right',
+        'switch-panels',
+        'switch-panels-backward',
+        'switch-group',
+        'switch-group-backward',
+        'switch-to-workspace-down',
+        'switch-to-workspace-up',
+        'switch-to-workspace-left',
+        'switch-to-workspace-right',
+        'toggle-maximized'
+        ]
+    </default>
+    <summary>Toggles the transparency of the cheatsheet popup</summary>
+    <description>Toggles the transparency of the cheatsheet popup.</description>
+  </key>
+</schema>
 </schemalist>

@@ -16,13 +16,11 @@ versions it should show personally configured shortcuts.
 - [x] works with Gnome 40
 - [x] transparency optional
 - [x] retrieve keybindings from Gsettings not a json file
-  - [x] get extdir
-  - [x] parse gsettings output
 - [x] fix window position
 - [x] escape should also close the popup
 - [x] hardcoded hide shortcuts
 - [x] show shell keybindings
-- [ ] preferences hide description array (v1)
+- [x] preferences hide description array (v1)
 
 ### Next
 
@@ -39,10 +37,17 @@ versions it should show personally configured shortcuts.
 - [ ] configure scope of keybinding app
 - [ ] configure toggle keybinding
 - [ ] preferences add shortcuts from other Apps
+  - [ ] using functions
+  - [ ] using json files
+  - [ ] using plugins?
+  - [ ] using plain text
+- [ ] multiple sheets
+- [ ] search filter
 - [ ] preferences detect currently running application and show it's shortcuts.
   - [ ] inkspace
   - [ ] vim
   - [ ] tmux
+  - [ ] readline
 
 ## Credits
 

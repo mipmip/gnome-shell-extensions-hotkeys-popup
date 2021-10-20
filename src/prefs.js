@@ -27,6 +27,7 @@ const Config = imports.misc.config;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience;
+const ShortLib = Me.imports.shortcutslib;
 
 /**
  * Initialises the preferences widget
@@ -50,53 +51,32 @@ function buildPrefsWidget() {
   return widget;
 }
 
-// Combines the benefits of spawn_sync (easy retrieval of output)
-// with those of spawn_async (non-blocking execution).
-// Based on https://github.com/optimisme/gjs-examples/blob/master/assets/spawn.js.
-function spawnWithCallback(workingDirectory, argv, envp, flags, childSetup, callback) {
-  let [success, pid, stdinFile, stdoutFile, stderrFile] = GLib.spawn_async_with_pipes(
-    workingDirectory, argv, envp, flags, childSetup);
+function updateHideArrayAdd(itemKey){
+  if(!this._settings){
+    this._settings = Convenience.getSettings();
+  }
 
-  if (!success)
-    return;
+  let hideArray = this._settings.get_strv("hide-array");
+  const index = hideArray.indexOf(itemKey);
 
-  GLib.close(stdinFile);
-  GLib.close(stderrFile);
-
-  let standardOutput = "";
-
-  let stdoutStream = new Gio.DataInputStream({
-    base_stream: new Gio.UnixInputStream({
-      fd: stdoutFile
-    })
-  });
-
-  readStream(stdoutStream, function(output) {
-    if (output === null) {
-      stdoutStream.close(null);
-      callback(standardOutput);
-    } else {
-      standardOutput += output;
-    }
-  });
-}
-function readStream(stream, callback) {
-  stream.read_line_async(GLib.PRIORITY_LOW, null, function(source, result) {
-    let [line] = source.read_line_finish(result);
-
-    if (line === null) {
-      callback(null);
-    } else {
-      callback(imports.byteArray.toString(line) + "\n");
-      readStream(source, callback);
-    }
-  });
+  if (index === -1) {
+    hideArray.push(itemKey);
+    this._settings.set_strv("hide-array", hideArray);
+  }
 }
 
+function updateHideArrayRemove(itemKey){
+  if(!this._settings){
+    this._settings = Convenience.getSettings();
+  }
 
-function getShortcutKeys(){
+  let hideArray = this._settings.get_strv("hide-array");
+  const index = hideArray.indexOf(itemKey);
 
-
+  if (index > -1) {
+    hideArray.splice(index, 1);
+    this._settings.set_strv("hide-array", hideArray);
+  }
 }
 
 /**
@@ -145,14 +125,14 @@ const ShortcutsPrefsWidget = new GObject.Class({
       label: _("Show tray icon"),
       margin_top: 6 }
     );
-    //this._settings.bind('show-icon', showIconCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
+    this._settings.bind('show-icon', showIconCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
     this._grid.attach_next_to(showIconCheckButton, mainSettingsLabel, Gtk.PositionType.BOTTOM, 1, 2);
 
     let showTransparentCheckButton = new Gtk.CheckButton({
       label: _("Tranparent Popup"),
       margin_top: 6 }
     );
-    //this._settings.bind('transparent-popup', showTransparentCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
+    this._settings.bind('transparent-popup', showTransparentCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
     this._grid.attach_next_to(showTransparentCheckButton, showIconCheckButton, Gtk.PositionType.BOTTOM, 1, 2);
 
     let enableItemsLabel = new Gtk.Label({
@@ -167,9 +147,11 @@ const ShortcutsPrefsWidget = new GObject.Class({
     let scriptPath = Me.dir.get_child("listkeys.sh").get_path();
     let hide_items = {};
 
+    let hideArray = this._settings.get_strv("hide-array");
+
     let previous_item = enableItemsLabel;
 
-    spawnWithCallback(null, [scriptPath],  null, GLib.SpawnFlags.SEARCH_PATH, null, function(standardOutput){
+    ShortLib.spawnWithCallback(null, [scriptPath],  null, GLib.SpawnFlags.SEARCH_PATH, null, function(standardOutput){
 
       let lines = standardOutput.split(/\r?\n/);
 
@@ -178,14 +160,29 @@ const ShortcutsPrefsWidget = new GObject.Class({
         if(line.trim() !== ""){
 
           let entry = line.split(" ");
-          log(entry);
 
           hide_items[entry[1]] = new Gtk.CheckButton({
-            label: _(entry[1]),
+            label: entry[1] + " " + ShortLib.normalize_description(entry[1]) + " ("+ShortLib.normalize_key(entry[2])+ ")",
             margin_top: 1
           });
 
-          //this._settings.bind('binding-'+entry[1], showIconCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
+          if(hideArray.includes(entry[1])){
+            hide_items[entry[1]].set_active(false);
+          }
+          else{
+            hide_items[entry[1]].set_active(true);
+          }
+
+          hide_items[entry[1]].connect("toggled",function(w){
+
+            if(w.get_active()){
+              updateHideArrayRemove(entry[1]);
+            }
+            else{
+              updateHideArrayAdd(entry[1]);
+            }
+          });
+
           this._grid.attach_next_to(hide_items[entry[1]], previous_item, Gtk.PositionType.BOTTOM, 1, 2);
           previous_item = hide_items[entry[1]];
 

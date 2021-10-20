@@ -32,6 +32,7 @@ const Main = imports.ui.main;
 
 const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience;
+const ShortLib = Me.imports.shortcutslib;
 const _ = Gettext.gettext;
 
 let button, stage, panel_panel, left_panel, right_panel, super_label;
@@ -113,66 +114,6 @@ function _toggleShortcuts() {
   }
 }
 
-// Combines the benefits of spawn_sync (easy retrieval of output)
-// with those of spawn_async (non-blocking execution).
-// Based on https://github.com/optimisme/gjs-examples/blob/master/assets/spawn.js.
-function spawnWithCallback(workingDirectory, argv, envp, flags, childSetup, callback) {
-  let [success, pid, stdinFile, stdoutFile, stderrFile] = GLib.spawn_async_with_pipes(
-    workingDirectory, argv, envp, flags, childSetup);
-
-  if (!success)
-    return;
-
-  GLib.close(stdinFile);
-  GLib.close(stderrFile);
-
-  let standardOutput = "";
-
-  let stdoutStream = new Gio.DataInputStream({
-    base_stream: new Gio.UnixInputStream({
-      fd: stdoutFile
-    })
-  });
-
-  readStream(stdoutStream, function(output) {
-    if (output === null) {
-      stdoutStream.close(null);
-      callback(standardOutput);
-    } else {
-      standardOutput += output;
-    }
-  });
-}
-function readStream(stream, callback) {
-  stream.read_line_async(GLib.PRIORITY_LOW, null, function(source, result) {
-    let [line] = source.read_line_finish(result);
-
-    if (line === null) {
-      callback(null);
-    } else {
-      callback(imports.byteArray.toString(line) + "\n");
-      readStream(source, callback);
-    }
-  });
-}
-
-function _normalize_description(str) {
-  str = str.replaceAll("-", " ");
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-function _normalize_key(str) {
-  return str.replace("['","").replace("']","").replaceAll(",","").replaceAll("'","");
-}
-
-function _translateSchemaNames(schema){
-
-  let translations = {
-    "org.gnome.shell.keybindings": "Shell",
-    "org.gnome.desktop.wm.keybindings": "Window Manager"
-  }
-
-  return translations[schema];
-}
 
 /**
  * Reads the shortcuts from a file specified in the settings. If this is not
@@ -180,37 +121,18 @@ function _translateSchemaNames(schema){
  */
 function _readShortcuts() {
 
-  let hideArray = [
-    "cycle-group",
-    "cycle-group-backward",
-    "cycle-panels",
-    "cycle-panels-backward",
-    "cycle-windows-backward",
-    "panel-main-menu",
-    "move-to-monitor-down",
-    "move-to-monitor-up",
-    "move-to-workspace-down",
-    "move-to-workspace-up",
-    "move-to-workspace-last",
-    "move-to-workspace-left",
-    "move-to-workspace-right",
-    "switch-panels",
-    "switch-panels-backward",
-    "switch-group",
-    "switch-group-backward",
-    "switch-to-workspace-down",
-    "switch-to-workspace-up",
-    "switch-to-workspace-left",
-    "switch-to-workspace-right",
-    "toggle-maximized",
-  ];
+  if(!this._settings){
+    this._settings = Convenience.getSettings();
+  }
+
+  let hideArray = this._settings.get_strv("hide-array");
 
   let scriptPath = Me.dir.get_child("listkeys.sh").get_path();
 
   shortcutsAll = [];
   let shortcutsTemp = {};
 
-  spawnWithCallback(null, [scriptPath],  null, GLib.SpawnFlags.SEARCH_PATH, null, function(standardOutput){
+  ShortLib.spawnWithCallback(null, [scriptPath],  null, GLib.SpawnFlags.SEARCH_PATH, null, function(standardOutput){
 
     if(!this._settings){
       this._settings = Convenience.getSettings();
@@ -230,8 +152,8 @@ function _readShortcuts() {
           }
 
           let shortCutEntry = {
-            description: _normalize_description(entry[1]),
-            key: _normalize_key(entry[2])
+            description: ShortLib.normalize_description(entry[1]),
+            key: ShortLib.normalize_key(entry[2])
           };
 
           shortcutsTemp[entry[0]].push(shortCutEntry);
@@ -242,7 +164,7 @@ function _readShortcuts() {
     Object.keys(shortcutsTemp).forEach(function(section){
 
       shortcutsAll.push({
-        name: _translateSchemaNames(section),
+        name: ShortLib.translateSchemaNames(section),
         shortcuts: shortcutsTemp[section],
       });
     });
