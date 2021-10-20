@@ -21,11 +21,13 @@ versions it should show personally configured shortcuts.
 - [x] fix window position
 - [x] escape should also close the popup
 - [x] hardcoded hide shortcuts
-- [ ] show shell keybindings
+- [x] show shell keybindings
 - [ ] preferences hide description array (v1)
 
 ### Next
 
+- [ ] create sub sections inside window manager keys
+- [ ] move spawncunfunctions to shared file
 - [ ] preferences hide description array (v2)
   - [ ] list found shortcuts with enable-toggle per applications/schema
 - [ ] preferences add shortcuts from other Gnome apps
