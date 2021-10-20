@@ -24,6 +24,7 @@ versions it should show personally configured shortcuts.
 
 ### Next
 
+- [ ] icon
 - [ ] configure othe keybinding to open the popup
 - [ ] create sub sections inside window manager keys
 - [ ] preferences show/hide description array (v2)
