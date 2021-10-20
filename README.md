@@ -20,22 +20,22 @@ versions it should show personally configured shortcuts.
 - [x] escape should also close the popup
 - [x] hardcoded hide shortcuts
 - [x] show shell keybindings
-- [x] preferences hide description array (v1)
+- [x] Configure which key-bindings are listed in the popup (v1)
 
 ### Next
 
+- [ ] configure othe keybinding to open the popup
 - [ ] create sub sections inside window manager keys
-- [ ] move spawncunfunctions to shared file
-- [ ] preferences hide description array (v2)
+- [ ] preferences show/hide description array (v2)
   - [ ] list found shortcuts with enable-toggle per applications/schema
 - [ ] preferences add shortcuts from other Gnome apps
   - [ ] use widget like in "auto move windows" preferences
 - [ ] get keys without shellscript
 - [ ] map gsettings to paragraphs
-- [ ] autohide
+- [ ] autohide popup
+- [ ] hide when mouse click
 - [ ] localized
 - [ ] configure scope of keybinding app
-- [ ] configure toggle keybinding
 - [ ] preferences add shortcuts from other Apps
   - [ ] using functions
   - [ ] using json files
