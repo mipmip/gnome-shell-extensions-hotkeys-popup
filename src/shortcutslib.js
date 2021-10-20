@@ -49,7 +49,7 @@ function normalize_description(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 function normalize_key(str) {
-  return str.replace("['","").replace("']","").replaceAll(",","").replaceAll("'","");
+  return str.replace("['","").replace("']","").replaceAll(",","").replaceAll("'","").replaceAll(">","> ");
 }
 
 function translateSchemaNames(schema){
