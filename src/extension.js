@@ -31,7 +31,6 @@ const Config = imports.misc.config;
 const Main = imports.ui.main;
 
 const Me = ExtensionUtils.getCurrentExtension();
-const Convenience = Me.imports.convenience;
 const ShortLib = Me.imports.shortcutslib;
 const _ = Gettext.gettext;
 
@@ -42,7 +41,7 @@ let _isAdded, _visible;
  * Initialises the plugin.
  */
 function init() {
-  Convenience.initTranslations();
+  ExtensionUtils.initTranslations();
 }
 
 /*
@@ -50,7 +49,7 @@ function init() {
  */
 function enable() {
 
-  this._settings = Convenience.getSettings();
+  this._settings = ExtensionUtils.getSettings();
   this._settings.connect("changed::show-icon",            this._toggleIcon.bind(this));
   this._settings.connect("changed::use-custom-shortcuts", this._setShortcutsFile.bind(this) );
   this._settings.connect("changed::transparent-popup",    this._setTranparency.bind(this) );
@@ -92,7 +91,7 @@ function disable() {
  */
 function _toggleShortcuts() {
   if(!this._settings){
-    this._settings = Convenience.getSettings();
+    this._settings = ExtensionUtils.getSettings();
   }
   if (!_visible) {
     _showPopup();
@@ -122,7 +121,7 @@ function _toggleShortcuts() {
 function _readShortcuts() {
 
   if(!this._settings){
-    this._settings = Convenience.getSettings();
+    this._settings = ExtensionUtils.getSettings();
   }
 
   let hideArray = this._settings.get_strv("hide-array");
@@ -135,7 +134,7 @@ function _readShortcuts() {
   ShortLib.spawnWithCallback(null, [scriptPath],  null, GLib.SpawnFlags.SEARCH_PATH, null, function(standardOutput){
 
     if(!this._settings){
-      this._settings = Convenience.getSettings();
+      this._settings = ExtensionUtils.getSettings();
     }
 
     let lines = standardOutput.split(/\r?\n/);

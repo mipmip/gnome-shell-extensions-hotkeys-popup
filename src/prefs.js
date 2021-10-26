@@ -26,14 +26,13 @@ const Config = imports.misc.config;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const Convenience = Me.imports.convenience;
 const ShortLib = Me.imports.shortcutslib;
 
 /**
  * Initialises the preferences widget
  */
 function init() {
-  Convenience.initTranslations();
+  ExtensionUtils.initTranslations();
 }
 
 /**
@@ -53,7 +52,7 @@ function buildPrefsWidget() {
 
 function updateHideArrayAdd(itemKey){
   if(!this._settings){
-    this._settings = Convenience.getSettings();
+    this._settings = ExtensionUtils.getSettings();
   }
 
   let hideArray = this._settings.get_strv("hide-array");
@@ -67,7 +66,7 @@ function updateHideArrayAdd(itemKey){
 
 function updateHideArrayRemove(itemKey){
   if(!this._settings){
-    this._settings = Convenience.getSettings();
+    this._settings = ExtensionUtils.getSettings();
   }
 
   let hideArray = this._settings.get_strv("hide-array");
@@ -101,7 +100,7 @@ const ShortcutsPrefsWidget = new GObject.Class({
 
     this.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
 
-    this._settings = Convenience.getSettings();
+    this._settings = ExtensionUtils.getSettings();
 
     this._grid = new Gtk.Grid();
     this._grid.margin_top = 20;
