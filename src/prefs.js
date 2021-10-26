@@ -41,12 +41,6 @@ function init() {
 function buildPrefsWidget() {
 
   let widget = new ShortcutsPrefsWidget();
-
-  let current_version = Config.PACKAGE_VERSION.split(".");
-  if (current_version[0] == 3 && current_version[1] < 38) {
-    widget.show_all();
-  }
-
   return widget;
 }
 

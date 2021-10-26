@@ -360,27 +360,18 @@ function _toggleIcon() {
     }
     return;
   }
+
   if (!_isAdded) {
     let current_version = Config.PACKAGE_VERSION.split(".");
-    if (current_version[0] == 3 && current_version[1] < 38) {
-      button = new St.Bin({
-        style_class: "panel-button",
-        reactive: true,
-        can_focus: true,
-        x_fill: true,
-        y_fill: false,
-        track_hover: true,
-      });
-    } else {
-      button = new St.Bin({
-        style_class: "panel-button",
-        reactive: true,
-        can_focus: true,
-        x_expand: true,
-        y_expand: false,
-        track_hover: true,
-      });
-    }
+    button = new St.Bin({
+      style_class: "panel-button",
+      reactive: true,
+      can_focus: true,
+      x_expand: true,
+      y_expand: false,
+      track_hover: true,
+    });
+
     let icon = new St.Icon({
       icon_name: "preferences-desktop-keyboard-shortcuts-symbolic",
       style_class: "system-status-icon",
