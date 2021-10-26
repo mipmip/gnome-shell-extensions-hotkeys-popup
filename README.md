@@ -10,7 +10,7 @@ versions it should show personally configured shortcuts.
 
 ## Features/Todo
 
-### Version 1 WIP
+### Version 1
 
 - [x] Shows popup with hotkeys
 - [x] works with Gnome 40
@@ -22,7 +22,15 @@ versions it should show personally configured shortcuts.
 - [x] show shell keybindings
 - [x] Configure which key-bindings are listed in the popup (v1)
 
-### Next
+### Version 2
+
+- [x] remove outdated convenience
+- [x] eslint
+- [ ] no support for <40 functions
+
+
+
+### Version Unknown
 
 - [ ] icon
 - [ ] configure othe keybinding to open the popup
