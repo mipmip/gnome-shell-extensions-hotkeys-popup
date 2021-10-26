@@ -51,6 +51,7 @@ function make-zip {
     compile-preferences
     echo 'Coping files...'
     cp -r LICENSE README.md src/* locale build/
+    find build -name "*.po*" -delete
     echo 'Creating archive..'
     cd build
     zip -r ../"$NAME".zip ./*
