@@ -4,8 +4,10 @@ const Gio = imports.gi.Gio;
 // Combines the benefits of spawn_sync (easy retrieval of output)
 // with those of spawn_async (non-blocking execution).
 // Based on https://github.com/optimisme/gjs-examples/blob/master/assets/spawn.js.
+
+/* exported spawnWithCallback */
 function spawnWithCallback(workingDirectory, argv, envp, flags, childSetup, callback) {
-  let [success, pid, stdinFile, stdoutFile, stderrFile] = GLib.spawn_async_with_pipes(
+  let [success, _, stdinFile, stdoutFile, stderrFile] = GLib.spawn_async_with_pipes(
     workingDirectory, argv, envp, flags, childSetup);
 
   if (!success)
@@ -22,7 +24,7 @@ function spawnWithCallback(workingDirectory, argv, envp, flags, childSetup, call
     })
   });
 
-  readStream(stdoutStream, function(output) {
+  readStream(stdoutStream, (output) => {
     if (output === null) {
       stdoutStream.close(null);
       callback(standardOutput);
@@ -31,8 +33,9 @@ function spawnWithCallback(workingDirectory, argv, envp, flags, childSetup, call
     }
   });
 }
+
 function readStream(stream, callback) {
-  stream.read_line_async(GLib.PRIORITY_LOW, null, function(source, result) {
+  stream.read_line_async(GLib.PRIORITY_LOW, null, (source, result) => {
     let [line] = source.read_line_finish(result);
 
     if (line === null) {
@@ -44,14 +47,19 @@ function readStream(stream, callback) {
   });
 }
 
+
+/* exported normalize_description */
 function normalize_description(str) {
   str = str.replaceAll("-", " ");
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+/* exported normalize_key */
 function normalize_key(str) {
   return str.replace("['","").replace("']","").replaceAll(",","").replaceAll("'","").replaceAll(">","> ");
 }
 
+/* exported translateSchemaNames */
 function translateSchemaNames(schema){
 
   let translations = {

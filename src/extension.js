@@ -16,17 +16,12 @@
 
 const GLib = imports.gi.GLib;
 const GObject = imports.gi.GObject;
-const Gio = imports.gi.Gio;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 const Clutter = imports.gi.Clutter;
 
 const Gettext = imports.gettext;
-const Mainloop = imports.mainloop;
-
 const ExtensionUtils = imports.misc.extensionUtils;
-
-const Config = imports.misc.config;
 
 const Main = imports.ui.main;
 
@@ -37,25 +32,23 @@ const _ = Gettext.gettext;
 let button, stage, panel_panel, left_panel, right_panel, super_label;
 let _isAdded, _visible;
 
-/**
- * Initialises the plugin.
- */
+/* exported init */
 function init() {
   ExtensionUtils.initTranslations();
 }
 
-/*
- * Enables the plugin by adding listeners and icons as necessary
- */
+/* exported enable */
+/* Enables the plugin by adding listeners and icons as necessary */
 function enable() {
 
   this._settings = ExtensionUtils.getSettings();
-  this._settings.connect("changed::show-icon",            this._toggleIcon.bind(this));
-  this._settings.connect("changed::use-custom-shortcuts", this._setShortcutsFile.bind(this) );
-  this._settings.connect("changed::transparent-popup",    this._setTranparency.bind(this) );
+  this._settings.connect("changed::show-icon",            _toggleIcon );
+  this._settings.connect("changed::use-custom-shortcuts", _setShortcutsFile );
+  this._settings.connect("changed::transparent-popup",    _setTranparency );
   _isAdded = false;
 
-  Main.overview._specialToggle = function (evt) {
+  /* exported evt */
+  Main.overview._specialToggle = function () {
     _toggleShortcuts();
   };
 
@@ -69,9 +62,8 @@ function enable() {
 }
 
 
-/**
- * Removes all traces of the listeners and icons that the extension created
- */
+/* Removes all traces of the listeners and icons that the extension created */
+/* exported disable */
 function disable() {
   if (_isAdded) {
     Main.panel._rightBox.remove_child(button);
@@ -96,20 +88,7 @@ function _toggleShortcuts() {
   if (!_visible) {
     _showPopup();
   } else {
-
-    // Hide popup
-    let current_version = Config.PACKAGE_VERSION.split(".");
-    if (current_version[0] == 3 && current_version[1] < 38) {
-      const Tweener = imports.ui.tweener;
-      Tweener.addTween(stage, {
-        opacity: 0,
-        time: 1,
-        transition: "easeOutQuad",
-        onComplete: _hidePopup,
-      });
-    } else {
-      _hidePopup();
-    }
+    _hidePopup();
   }
 }
 
@@ -139,7 +118,7 @@ function _readShortcuts() {
 
     let lines = standardOutput.split(/\r?\n/);
 
-    lines.forEach(function(line){
+    lines.forEach((line)=> {
 
       if(line.trim() !== ""){
         let entry = line.split(" ");
@@ -160,7 +139,7 @@ function _readShortcuts() {
       }
     });
 
-    Object.keys(shortcutsTemp).forEach(function(section){
+    Object.keys(shortcutsTemp).forEach((section)=> {
 
       shortcutsAll.push({
         name: ShortLib.translateSchemaNames(section),
@@ -362,7 +341,6 @@ function _toggleIcon() {
   }
 
   if (!_isAdded) {
-    let current_version = Config.PACKAGE_VERSION.split(".");
     button = new St.Bin({
       style_class: "panel-button",
       reactive: true,

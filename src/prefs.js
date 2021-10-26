@@ -19,10 +19,8 @@ const GObject = imports.gi.GObject;
 const Gio = imports.gi.Gio;
 const Gtk = imports.gi.Gtk;
 
-const Lang = imports.lang;
 const Gettext = imports.gettext;
 const _ = Gettext.gettext;
-const Config = imports.misc.config;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -31,6 +29,7 @@ const ShortLib = Me.imports.shortcutslib;
 /**
  * Initialises the preferences widget
  */
+/* exported init */
 function init() {
   ExtensionUtils.initTranslations();
 }
@@ -38,6 +37,7 @@ function init() {
 /**
  * Builds the preferences widget
  */
+/* exported buildPrefsWidget */
 function buildPrefsWidget() {
 
   let widget = new ShortcutsPrefsWidget();
@@ -84,7 +84,7 @@ const ShortcutsPrefsWidget = new GObject.Class({
   /**
    * Initalises the widget
    */
-  _init: function(params) {
+  _init: function() {
     this.parent(
       {
         valign: Gtk.Align.FILL,
@@ -144,11 +144,11 @@ const ShortcutsPrefsWidget = new GObject.Class({
 
     let previous_item = enableItemsLabel;
 
-    ShortLib.spawnWithCallback(null, [scriptPath],  null, GLib.SpawnFlags.SEARCH_PATH, null, function(standardOutput){
+    ShortLib.spawnWithCallback(null, [scriptPath],  null, GLib.SpawnFlags.SEARCH_PATH, null, (standardOutput) => {
 
       let lines = standardOutput.split(/\r?\n/);
 
-      lines.forEach(function(line){
+      lines.forEach( (line) => {
 
         if(line.trim() !== ""){
 
@@ -166,7 +166,7 @@ const ShortcutsPrefsWidget = new GObject.Class({
             hide_items[entry[1]].set_active(true);
           }
 
-          hide_items[entry[1]].connect("toggled",function(w){
+          hide_items[entry[1]].connect("toggled", ( w ) => {
 
             if(w.get_active()){
               updateHideArrayRemove(entry[1]);
@@ -181,9 +181,9 @@ const ShortcutsPrefsWidget = new GObject.Class({
 
         }
 
-      }.bind(this));
+      });
 
-    }.bind(this));
+    });
 
   }
 });
