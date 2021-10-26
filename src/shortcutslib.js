@@ -1,6 +1,3 @@
-const GLib = imports.gi.GLib;
-const Gio = imports.gi.Gio;
-
 /* exported normalize_description */
 function normalize_description(str) {
   str = str.replaceAll("-", " ");

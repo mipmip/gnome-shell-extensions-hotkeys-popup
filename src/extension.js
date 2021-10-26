@@ -14,7 +14,6 @@
  * along with Hotkeys Popup.  If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
-const GLib = imports.gi.GLib;
 const GObject = imports.gi.GObject;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
@@ -106,12 +105,9 @@ function _readShortcuts() {
 
   let hideArray = this._settings.get_strv("hide-array");
 
-  let scriptPath = Me.dir.get_child("listkeys.sh").get_path();
-
   shortcutsAll = [];
   let shortcutsTemp = {};
 
-  //WIP REPLACE LISTKEYS.SH
   let schemas = [
     'org.gnome.shell.keybindings',
     'org.gnome.desktop.wm.keybindings'
@@ -124,7 +120,6 @@ function _readShortcuts() {
     keys.forEach((key)=>{
       if(keybindingsSettings.get_strv(key).length > 0){
         let val = keybindingsSettings.get_strv(key).toString();
-        //log(`${schema} -> ${key}: ${val}`);
 
         if(!hideArray.includes(key)){
 
@@ -183,8 +178,6 @@ function _readShortcuts() {
 
   let listProgress = 0.0;
   for (let i = 0; i < shortcuts.length; i++) {
-
-    log(shortcuts[i].name);
 
     listProgress += (shortcuts[i].shortcuts.length * 1.0) / shortcutLength;
     let panel = listProgress < 0.5 ? left_panel : right_panel;

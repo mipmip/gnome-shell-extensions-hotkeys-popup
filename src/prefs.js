@@ -14,7 +14,6 @@
  * along with Hotkeys Popup.  If not, see <http://www.gnu.org/licenses/>.
  **********************************************************************/
 
-const GLib = imports.gi.GLib;
 const GObject = imports.gi.GObject;
 const Gio = imports.gi.Gio;
 const Gtk = imports.gi.Gtk;
@@ -137,7 +136,6 @@ const ShortcutsPrefsWidget = new GObject.Class({
     });
     this._grid.attach_next_to(enableItemsLabel, showTransparentCheckButton, Gtk.PositionType.BOTTOM, 1, 2);
 
-    let scriptPath = Me.dir.get_child("listkeys.sh").get_path();
     let hide_items = {};
 
     let hideArray = this._settings.get_strv("hide-array");
@@ -156,7 +154,6 @@ const ShortcutsPrefsWidget = new GObject.Class({
       keys.forEach((key)=>{
         if(keybindingsSettings.get_strv(key).length > 0){
           let val = keybindingsSettings.get_strv(key).toString();
-          log(`${schema} -> ${key}: ${val}`);
 
           hide_items[key] = new Gtk.CheckButton({
             label: key + " " + ShortLib.normalize_description(key) + " ("+ShortLib.normalize_key(val)+ ")",
