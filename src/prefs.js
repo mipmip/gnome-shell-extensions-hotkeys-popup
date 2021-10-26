@@ -141,48 +141,50 @@ const ShortcutsPrefsWidget = new GObject.Class({
     let hide_items = {};
 
     let hideArray = this._settings.get_strv("hide-array");
-
     let previous_item = enableItemsLabel;
 
-    ShortLib.spawnWithCallback(null, [scriptPath],  null, GLib.SpawnFlags.SEARCH_PATH, null, (standardOutput) => {
+    //WIP REPLACE LISTKEYS.SH
+    let schemas = [
+      'org.gnome.shell.keybindings',
+      'org.gnome.desktop.wm.keybindings'
+    ];
 
-      let lines = standardOutput.split(/\r?\n/);
+    schemas.forEach((schema)=>{
+      let keybindingsSettings = new Gio.Settings({ schema: schema });
+      let keys = keybindingsSettings.settings_schema.list_keys();
 
-      lines.forEach( (line) => {
+      keys.forEach((key)=>{
+        if(keybindingsSettings.get_strv(key).length > 0){
+          let val = keybindingsSettings.get_strv(key).toString();
+          log(`${schema} -> ${key}: ${val}`);
 
-        if(line.trim() !== ""){
-
-          let entry = line.split(" ");
-
-          hide_items[entry[1]] = new Gtk.CheckButton({
-            label: entry[1] + " " + ShortLib.normalize_description(entry[1]) + " ("+ShortLib.normalize_key(entry[2])+ ")",
+          hide_items[key] = new Gtk.CheckButton({
+            label: key + " " + ShortLib.normalize_description(key) + " ("+ShortLib.normalize_key(val)+ ")",
             margin_top: 1
           });
 
-          if(hideArray.includes(entry[1])){
-            hide_items[entry[1]].set_active(false);
+          if(hideArray.includes(key)){
+            hide_items[key].set_active(false);
           }
           else{
-            hide_items[entry[1]].set_active(true);
+            hide_items[key].set_active(true);
           }
 
-          hide_items[entry[1]].connect("toggled", ( w ) => {
+          hide_items[key].connect("toggled", ( w ) => {
 
             if(w.get_active()){
-              updateHideArrayRemove(entry[1]);
+              updateHideArrayRemove(key);
             }
             else{
-              updateHideArrayAdd(entry[1]);
+              updateHideArrayAdd(key);
             }
           });
 
-          this._grid.attach_next_to(hide_items[entry[1]], previous_item, Gtk.PositionType.BOTTOM, 1, 2);
-          previous_item = hide_items[entry[1]];
+          this._grid.attach_next_to(hide_items[key], previous_item, Gtk.PositionType.BOTTOM, 1, 2);
+          previous_item = hide_items[key];
 
         }
-
-      });
-
+      })
     });
 
   }

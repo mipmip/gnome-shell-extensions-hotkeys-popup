@@ -26,9 +26,10 @@ versions it should show personally configured shortcuts.
 
 - [x] remove outdated convenience
 - [x] eslint
-- [ ] no support for <40 functions
-
-
+- [x] no support for <40 functions
+- [ ] use native gsettings
+- [ ] some basic tranlation support (dutch)
+- [ ] configure shortcut combination
 
 ### Version Unknown
 

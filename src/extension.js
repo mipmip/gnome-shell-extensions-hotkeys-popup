@@ -19,6 +19,7 @@ const GObject = imports.gi.GObject;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 const Clutter = imports.gi.Clutter;
+const Gio = imports.gi.Gio;
 
 const Gettext = imports.gettext;
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -110,45 +111,49 @@ function _readShortcuts() {
   shortcutsAll = [];
   let shortcutsTemp = {};
 
-  ShortLib.spawnWithCallback(null, [scriptPath],  null, GLib.SpawnFlags.SEARCH_PATH, null, function(standardOutput){
+  //WIP REPLACE LISTKEYS.SH
+  let schemas = [
+    'org.gnome.shell.keybindings',
+    'org.gnome.desktop.wm.keybindings'
+  ];
 
-    if(!this._settings){
-      this._settings = ExtensionUtils.getSettings();
-    }
+  schemas.forEach((schema)=>{
+    let keybindingsSettings = new Gio.Settings({ schema: schema });
+    let keys = keybindingsSettings.settings_schema.list_keys();
 
-    let lines = standardOutput.split(/\r?\n/);
+    keys.forEach((key)=>{
+      if(keybindingsSettings.get_strv(key).length > 0){
+        let val = keybindingsSettings.get_strv(key).toString();
+        //log(`${schema} -> ${key}: ${val}`);
 
-    lines.forEach((line)=> {
+        if(!hideArray.includes(key)){
 
-      if(line.trim() !== ""){
-        let entry = line.split(" ");
-
-        if(!hideArray.includes(entry[1])){
-
-          if(!shortcutsTemp[entry[0]]){
-            shortcutsTemp[entry[0]] = [];
+          if(!shortcutsTemp[schema]){
+            shortcutsTemp[schema] = [];
           }
 
           let shortCutEntry = {
-            description: ShortLib.normalize_description(entry[1]),
-            key: ShortLib.normalize_key(entry[2])
+            description: ShortLib.normalize_description(key),
+            key: ShortLib.normalize_key(val)
           };
 
-          shortcutsTemp[entry[0]].push(shortCutEntry);
+          shortcutsTemp[schema].push(shortCutEntry);
         }
+
       }
+    })
+  });
+
+  Object.keys(shortcutsTemp).forEach((section)=> {
+
+    shortcutsAll.push({
+      name: ShortLib.translateSchemaNames(section),
+      shortcuts: shortcutsTemp[section],
     });
+  });
 
-    Object.keys(shortcutsTemp).forEach((section)=> {
-
-      shortcutsAll.push({
-        name: ShortLib.translateSchemaNames(section),
-        shortcuts: shortcutsTemp[section],
-      });
-    });
-
-    //OLD CODE TO READ JSON WITH SHORTCUTS
-    /*
+  //OLD CODE TO READ JSON WITH SHORTCUTS
+  /*
     let SHORTCUTS_FILE = this._settings.get_boolean("use-custom-shortcuts")
       ? this._settings.get_string("shortcuts-file")
       : Me.dir.get_child("shortcuts.json").get_path();
@@ -167,54 +172,54 @@ function _readShortcuts() {
       return;
     }
 
-    //let shortcuts = JSON.parse(contents);
-    */
+  //let shortcuts = JSON.parse(contents);
+  */
 
-    let shortcuts = shortcutsAll;
-    let shortcutLength = shortcuts.length;
-    for (let i = 0; i < shortcuts.length; i++) {
-      shortcutLength += shortcuts[i].shortcuts.length;
-    }
+  let shortcuts = shortcutsAll;
+  let shortcutLength = shortcuts.length;
+  for (let i = 0; i < shortcuts.length; i++) {
+    shortcutLength += shortcuts[i].shortcuts.length;
+  }
 
-    let listProgress = 0.0;
-    for (let i = 0; i < shortcuts.length; i++) {
+  let listProgress = 0.0;
+  for (let i = 0; i < shortcuts.length; i++) {
 
-      listProgress += (shortcuts[i].shortcuts.length * 1.0) / shortcutLength;
-      let panel = listProgress < 0.5 ? left_panel : right_panel;
-      panel.add_actor(
+    log(shortcuts[i].name);
+
+    listProgress += (shortcuts[i].shortcuts.length * 1.0) / shortcutLength;
+    let panel = listProgress < 0.5 ? left_panel : right_panel;
+    panel.add_actor(
+      new St.Label({
+        style_class: "shortcut-section",
+        text: shortcuts[i].name,
+      })
+    );
+
+    for (let j = 0; j < shortcuts[i].shortcuts.length; j++) {
+      let item_panel = new St.BoxLayout({
+        style_class: "item-boxlayout",
+        pack_start: false,
+        vertical: false,
+      });
+      let key = shortcuts[i].shortcuts[j].key;
+      let description = _(shortcuts[i].shortcuts[j].description);
+      item_panel.add(
         new St.Label({
-          style_class: "shortcut-section",
-          text: shortcuts[i].name,
+          style_class: "shortcut-key-label",
+          text: key,
         })
       );
-
-      for (let j = 0; j < shortcuts[i].shortcuts.length; j++) {
-        let item_panel = new St.BoxLayout({
-          style_class: "item-boxlayout",
-          pack_start: false,
-          vertical: false,
-        });
-        let key = shortcuts[i].shortcuts[j].key;
-        let description = _(shortcuts[i].shortcuts[j].description);
-        item_panel.add(
-          new St.Label({
-            style_class: "shortcut-key-label",
-            text: key,
-          })
-        );
-        item_panel.add(
-          new St.Label({
-            style_class: "shortcut-description-label",
-            text: description,
-          })
-        );
-        panel.add_actor(item_panel);
-      }
+      item_panel.add(
+        new St.Label({
+          style_class: "shortcut-description-label",
+          text: description,
+        })
+      );
+      panel.add_actor(item_panel);
     }
+  }
 
-    centerBox();
-
-  });
+  centerBox();
 }
 
 
