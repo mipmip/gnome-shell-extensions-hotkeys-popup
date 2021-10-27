@@ -46,6 +46,8 @@ function make-zip {
     if [ -d build ]; then
         rm -r build
     fi
+
+    rm -fv "$NAME".zip
     mkdir build
     compile-translations
     compile-preferences
