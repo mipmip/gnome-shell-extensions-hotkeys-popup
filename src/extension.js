@@ -283,7 +283,9 @@ function cleanupWidgets(){
   right_panel = null;
   panel_panel = null;
   super_label = null;
-  stage.destroy();
+  if(stage) {
+    stage.destroy();
+  }
   stage = null;
 }
 
