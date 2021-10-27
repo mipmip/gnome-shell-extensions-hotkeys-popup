@@ -25,6 +25,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const ShortLib = Me.imports.shortcutslib;
 const UI = Me.imports.ui;
+const _settings = ExtensionUtils.getSettings();
 
 /**
  * Initialises the preferences widget
@@ -45,30 +46,30 @@ function buildPrefsWidget() {
 }
 
 function updateHideArrayAdd(itemKey){
-  if(!this._settings){
-    this._settings = ExtensionUtils.getSettings();
+  if(!_settings){
+    _settings = ExtensionUtils.getSettings();
   }
 
-  let hideArray = this._settings.get_strv("hide-array");
+  let hideArray = _settings.get_strv("hide-array");
   const index = hideArray.indexOf(itemKey);
 
   if (index === -1) {
     hideArray.push(itemKey);
-    this._settings.set_strv("hide-array", hideArray);
+    _settings.set_strv("hide-array", hideArray);
   }
 }
 
 function updateHideArrayRemove(itemKey){
-  if(!this._settings){
-    this._settings = ExtensionUtils.getSettings();
+  if(!_settings){
+    _settings = ExtensionUtils.getSettings();
   }
 
-  let hideArray = this._settings.get_strv("hide-array");
+  let hideArray = _settings.get_strv("hide-array");
   const index = hideArray.indexOf(itemKey);
 
   if (index > -1) {
     hideArray.splice(index, 1);
-    this._settings.set_strv("hide-array", hideArray);
+    _settings.set_strv("hide-array", hideArray);
   }
 }
 
@@ -94,7 +95,6 @@ const ShortcutsPrefsWidget = new GObject.Class({
 
     this.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
 
-    this._settings = ExtensionUtils.getSettings();
 
     this._grid = new UI.ListGrid();
 
@@ -103,24 +103,24 @@ const ShortcutsPrefsWidget = new GObject.Class({
     let mainSettingsLabel = new UI.LargeLabel("Main Settings");
     this._grid._add(mainSettingsLabel)
 
-    this._field_shortcut = new UI.Shortcut(this._settings.get_strv("keybinding-show-popup"));
+    this._field_shortcut = new UI.Shortcut(_settings.get_strv("keybinding-show-popup"));
     let label_shortcut = new UI.Label('Shortcut Keybinding')
     this._grid._add(label_shortcut, this._field_shortcut);
 
-    this._field_shortcut.connect('changed', (widget, keys) => { this._settings.set_strv("keybinding-show-popup", [keys]); });
+    this._field_shortcut.connect('changed', (widget, keys) => { _settings.set_strv("keybinding-show-popup", [keys]); });
 
     let showIconCheckButton = new UI.Check("Show tray icon");
-    this._settings.bind('show-icon', showIconCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
+    _settings.bind('show-icon', showIconCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
     this._grid._add(showIconCheckButton);
 
     let showTransparentCheckButton = new UI.Check("Transparent Background");
-    this._settings.bind('transparent-popup', showTransparentCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
+    _settings.bind('transparent-popup', showTransparentCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
     this._grid._add(showTransparentCheckButton);
 
     let hide_items = {};
     let hide_schemas = {};
 
-    let hideArray = this._settings.get_strv("hide-array");
+    let hideArray = _settings.get_strv("hide-array");
 
     let schemas = [
       'org.gnome.shell.keybindings',

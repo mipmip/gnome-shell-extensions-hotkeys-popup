@@ -19,3 +19,5 @@ function translateSchemaNames(schema){
 
   return translations[schema];
 }
+
+

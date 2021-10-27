@@ -31,7 +31,8 @@ const ShortLib = Me.imports.shortcutslib;
 const _ = Gettext.gettext;
 
 let button, stage, panel_panel, left_panel, right_panel, super_label;
-let _isAdded, _visible;
+let _iconWidgetIsAdded, _visible, _settings;
+let background_class = "background-boxlayout";
 
 /* exported init */
 function init() {
@@ -42,32 +43,33 @@ function init() {
 /* Enables the plugin by adding listeners and icons as necessary */
 function enable() {
 
-  this._settings = ExtensionUtils.getSettings();
-  this._settings.connect("changed::show-icon",            _toggleIcon );
-  this._settings.connect("changed::use-custom-shortcuts", _setShortcutsFile );
-  this._settings.connect("changed::transparent-popup",    _setTranparency );
-  _isAdded = false;
+  _settings = ExtensionUtils.getSettings();
+  _settings.connect("changed::show-icon",            _toggleIcon );
+  _iconWidgetIsAdded = false;
 
   let flag = Meta.KeyBindingFlags.IGNORE_AUTOREPEAT;
   let mode = Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW;
-  Main.wm.addKeybinding("keybinding-show-popup",this._settings, flag, mode, () => {
+  Main.wm.addKeybinding("keybinding-show-popup",_settings, flag, mode, () => {
     _toggleShortcuts();
   })
 
   _toggleIcon();
+
 }
 
 
 /* Removes all traces of the listeners and icons that the extension created */
 /* exported disable */
 function disable() {
-  if (_isAdded) {
+
+  if (_iconWidgetIsAdded) {
     Main.panel._rightBox.remove_child(button);
-    _isAdded = false;
+    _iconWidgetIsAdded = false;
   }
 
   Main.wm.removeKeybinding("keybinding-show-popup");
 
+  cleanupWidgets();
   _visible = false;
 }
 
@@ -75,9 +77,6 @@ function disable() {
  * Builds the pop-up and shows the shortcut description list
  */
 function _toggleShortcuts() {
-  if(!this._settings){
-    this._settings = ExtensionUtils.getSettings();
-  }
   if (!_visible) {
     _showPopup();
   } else {
@@ -92,11 +91,7 @@ function _toggleShortcuts() {
  */
 function _readShortcuts() {
 
-  if(!this._settings){
-    this._settings = ExtensionUtils.getSettings();
-  }
-
-  let hideArray = this._settings.get_strv("hide-array");
+  let hideArray = _settings.get_strv("hide-array");
 
   shortcutsAll = [];
   let shortcutsTemp = {};
@@ -182,9 +177,7 @@ function _readShortcuts() {
     }
   }
 
-  centerBox();
 }
-
 
 var PopupBox = GObject.registerClass({
   Signals: {
@@ -208,12 +201,6 @@ var PopupBox = GObject.registerClass({
 
 function _showPopup(){
   if (!stage) {
-    // Show popup
-
-    let background_class = "background-boxlayout";
-    if (this._settings.get_boolean("transparent-popup")) {
-      background_class = "background-boxlayout-transparent";
-    }
 
     stage = new PopupBox({
       style_class: background_class,
@@ -259,6 +246,7 @@ function _showPopup(){
     Main.layoutManager.addTopChrome(stage);
   }
 
+  centerBox();
 
   _visible = true;
 }
@@ -285,13 +273,18 @@ function _hidePopup() {
   stage.remove_actor(panel_panel);
   stage.remove_actor(super_label);
 
+  cleanupWidgets();
+
+  _visible = false;
+}
+
+function cleanupWidgets(){
   left_panel = null;
   right_panel = null;
   panel_panel = null;
   super_label = null;
   stage.destroy();
   stage = null;
-  _visible = false;
 }
 
 /*
@@ -299,16 +292,16 @@ function _hidePopup() {
  * changes the setting
  */
 function _toggleIcon() {
-  let SHOW_ICON = this._settings.get_boolean("show-icon");
+  let SHOW_ICON = _settings.get_boolean("show-icon");
   if (!SHOW_ICON) {
-    if (_isAdded) {
+    if (_iconWidgetIsAdded) {
       Main.panel._rightBox.remove_child(button);
-      _isAdded = false;
+      _iconWidgetIsAdded = false;
     }
     return;
   }
 
-  if (!_isAdded) {
+  if (!_iconWidgetIsAdded) {
     button = new St.Bin({
       style_class: "panel-button",
       reactive: true,
@@ -327,27 +320,6 @@ function _toggleIcon() {
     button.connect("button-press-event", _toggleShortcuts);
 
     Main.panel._rightBox.insert_child_at_index(button, 0);
-    _isAdded = true;
-  }
-}
-
-/**
- * Updates the shortcut file location when it is changed in the settings
- */
-function _setShortcutsFile() {
-  if (!this._settings.get_boolean("use-custom-shortcuts")) {
-    this._settings.set_string(
-      "shortcuts-file",
-      Me.dir.get_child("shortcuts.json").get_path()
-    );
-  }
-}
-
-function _setTranparency() {
-  if (this._settings.get_boolean("transparent-popup")) {
-    log("trans yes");
-  }
-  else{
-    log("trans no");
+    _iconWidgetIsAdded = true;
   }
 }
