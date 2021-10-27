@@ -8,61 +8,32 @@ Gnome hotkeys in a popup. The popup is activated with <kbd>Super + S</kbd>.
 Currently it only shows some of the window manager shortcuts. In the future
 versions it should show personally configured shortcuts.
 
-## Features/Todo
+## Features
 
-### Version 1
+- Shows popup with hotkeys of Gnome Shell and Gnome Window Manager
+- Get configured shortcuts from GSettings
+- Works with Gnome 40
+- Transparency optional
+- Set hotkey key binding in preference
+- Choose which hotkeys should be displayed in popup
 
-- [x] Shows popup with hotkeys
-- [x] works with Gnome 40
-- [x] transparency optional
-- [x] retrieve keybindings from Gsettings not a json file
-- [x] fix window position
-- [x] escape should also close the popup
-- [x] hardcoded hide shortcuts
-- [x] show shell keybindings
-- [x] Configure which key-bindings are listed in the popup (v1)
+## Future
 
-### Version 2
+- Add more schema's
+- Add shortcuts from non GTK applications
+- Add custom shortcuts
+- Detect current active application to show it's shortcuts
+- Filter shortcuts
+- Colorize sections
+- Themes
 
-- [x] remove outdated convenience
-- [x] eslint
-- [x] no support for <40 functions
-- [x] use native gsettings
+## Contributing
 
-- [ ] some basic translation support (dutch)
-- [ ] configure shortcut combination
-
-- [ ] cleanup preferences
-- [ ] central place for schema's
-- [ ] add custom schema's
-
-### Version Unknown
-
-- [ ] icon
-- [ ] configure othe keybinding to open the popup
-- [ ] create sub sections inside window manager keys
-- [ ] preferences show/hide description array (v2)
-  - [ ] list found shortcuts with enable-toggle per applications/schema
-- [ ] preferences add shortcuts from other Gnome apps
-  - [ ] use widget like in "auto move windows" preferences
-- [ ] get keys without shellscript
-- [ ] map gsettings to paragraphs
-- [ ] autohide popup
-- [ ] hide when mouse click
-- [ ] localized
-- [ ] configure scope of keybinding app
-- [ ] preferences add shortcuts from other Apps
-  - [ ] using functions
-  - [ ] using json files
-  - [ ] using plugins?
-  - [ ] using plain text
-- [ ] multiple sheets
-- [ ] search filter
-- [ ] preferences detect currently running application and show it's shortcuts.
-  - [ ] inkspace
-  - [ ] vim
-  - [ ] tmux
-  - [ ] readline
+1. Fork it ( https://github.com/mipmip/gnome-shell-extensions-hotkeys-popup/fork )
+1. Create your feature branch (git checkout -b my-new-feature)
+1. Commit your changes (git commit -am 'Add some feature')
+1. Push to the branch (git push origin my-new-feature)
+1. Create a new Pull Request
 
 ## Credits
 
