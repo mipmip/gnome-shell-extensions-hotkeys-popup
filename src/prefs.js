@@ -24,6 +24,7 @@ const _ = Gettext.gettext;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const ShortLib = Me.imports.shortcutslib;
+const UI = Me.imports.ui;
 
 /**
  * Initialises the preferences widget
@@ -95,53 +96,32 @@ const ShortcutsPrefsWidget = new GObject.Class({
 
     this._settings = ExtensionUtils.getSettings();
 
-    this._grid = new Gtk.Grid();
-    this._grid.margin_top = 20;
-    this._grid.margin_start = 20;
-    this._grid.row_spacing = 5;
-    this._grid.column_spacing = 10;
-    this._grid.set_orientation(Gtk.Orientation.VERTICAL);
+    this._grid = new UI.ListGrid();
 
-    this.set_child(this._grid);
+    this.set_child(new UI.Frame(this._grid));
 
-    let mainSettingsLabel = new Gtk.Label({
-      label: '<span size="x-large">Main Settings</span>',
-      use_markup: true,
-      xalign: 0,
-      hexpand: true
-    });
+    let mainSettingsLabel = new UI.LargeLabel("Main Settings");
+    this._grid._add(mainSettingsLabel)
 
-    this._grid.attach(mainSettingsLabel, 0, 1, 1, 1)
+    this._field_shortcut = new UI.Shortcut(this._settings.get_strv("keybinding-show-popup"));
+    let label_shortcut = new UI.Label('Shortcut Keybinding')
+    this._grid._add(label_shortcut, this._field_shortcut);
 
-    let showIconCheckButton = new Gtk.CheckButton({
-      label: _("Show tray icon"),
-      margin_top: 6 }
-    );
+    this._field_shortcut.connect('changed', (widget, keys) => { this._settings.set_strv("keybinding-show-popup", [keys]); });
+
+    let showIconCheckButton = new UI.Check("Show tray icon");
     this._settings.bind('show-icon', showIconCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
-    this._grid.attach_next_to(showIconCheckButton, mainSettingsLabel, Gtk.PositionType.BOTTOM, 1, 2);
+    this._grid._add(showIconCheckButton);
 
-    let showTransparentCheckButton = new Gtk.CheckButton({
-      label: _("Tranparent Popup"),
-      margin_top: 6 }
-    );
+    let showTransparentCheckButton = new UI.Check("Transparent Background");
     this._settings.bind('transparent-popup', showTransparentCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
-    this._grid.attach_next_to(showTransparentCheckButton, showIconCheckButton, Gtk.PositionType.BOTTOM, 1, 2);
-
-    let enableItemsLabel = new Gtk.Label({
-      label: '<span size="x-large">enable shortcut items</span>',
-      use_markup: true,
-      xalign: 0,
-      hexpand: true,
-      margin_top: 6
-    });
-    this._grid.attach_next_to(enableItemsLabel, showTransparentCheckButton, Gtk.PositionType.BOTTOM, 1, 2);
+    this._grid._add(showTransparentCheckButton);
 
     let hide_items = {};
+    let hide_schemas = {};
 
     let hideArray = this._settings.get_strv("hide-array");
-    let previous_item = enableItemsLabel;
 
-    //WIP REPLACE LISTKEYS.SH
     let schemas = [
       'org.gnome.shell.keybindings',
       'org.gnome.desktop.wm.keybindings'
@@ -151,12 +131,14 @@ const ShortcutsPrefsWidget = new GObject.Class({
       let keybindingsSettings = new Gio.Settings({ schema: schema });
       let keys = keybindingsSettings.settings_schema.list_keys();
 
+      hide_schemas[schema] = new UI.LargeLabel("Visible shortcut items for "+ ShortLib.translateSchemaNames(schema));
+      this._grid._add(hide_schemas[schema]);
+
       keys.forEach((key)=>{
         if(keybindingsSettings.get_strv(key).length > 0){
-          let val = keybindingsSettings.get_strv(key).toString();
 
           hide_items[key] = new Gtk.CheckButton({
-            label: key + " " + ShortLib.normalize_description(key) + " ("+ShortLib.normalize_key(val)+ ")",
+            label: ShortLib.normalize_description(key),
             margin_top: 1
           });
 
@@ -177,8 +159,7 @@ const ShortcutsPrefsWidget = new GObject.Class({
             }
           });
 
-          this._grid.attach_next_to(hide_items[key], previous_item, Gtk.PositionType.BOTTOM, 1, 2);
-          previous_item = hide_items[key];
+          this._grid._add(hide_items[key]);
 
         }
       })

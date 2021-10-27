@@ -17,8 +17,13 @@
     </key>
     <key name="transparent-popup" type="b">
       <default>false</default>
-      <summary>Toggles the transparency of the cheatsheet popup</summary>
-      <description>Toggles the transparency of the cheatsheet popup.</description>
+      <summary>Toggles the transparency of the hotkeys popup</summary>
+      <description>Toggles the transparency of the hotkeys popup.</description>
+    </key>
+    <key name="keybinding-show-popup" type="as">
+      <default><![CDATA[['<Super>h']]]></default>
+      <summary>keybinding show popup</summary>
+      <description>Keybinding to open the hotkeys popup.</description>
     </key>
     <key name="hide-array" type="as">
       <default>[

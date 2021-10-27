@@ -27,9 +27,14 @@ versions it should show personally configured shortcuts.
 - [x] remove outdated convenience
 - [x] eslint
 - [x] no support for <40 functions
-- [ ] use native gsettings
-- [ ] some basic tranlation support (dutch)
+- [x] use native gsettings
+
+- [ ] some basic translation support (dutch)
 - [ ] configure shortcut combination
+
+- [ ] cleanup preferences
+- [ ] central place for schema's
+- [ ] add custom schema's
 
 ### Version Unknown
 

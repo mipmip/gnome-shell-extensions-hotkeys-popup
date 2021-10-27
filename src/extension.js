@@ -16,6 +16,7 @@
 
 const GObject = imports.gi.GObject;
 const Shell = imports.gi.Shell;
+const Meta = imports.gi.Meta;
 const St = imports.gi.St;
 const Clutter = imports.gi.Clutter;
 const Gio = imports.gi.Gio;
@@ -47,16 +48,11 @@ function enable() {
   this._settings.connect("changed::transparent-popup",    _setTranparency );
   _isAdded = false;
 
-  /* exported evt */
-  Main.overview._specialToggle = function () {
+  let flag = Meta.KeyBindingFlags.IGNORE_AUTOREPEAT;
+  let mode = Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW;
+  Main.wm.addKeybinding("keybinding-show-popup",this._settings, flag, mode, () => {
     _toggleShortcuts();
-  };
-
-  Main.wm.setCustomKeybindingHandler(
-    "toggle-overview",
-    Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW,
-    Main.overview._specialToggle.bind(this, Main.overview)
-  );
+  })
 
   _toggleIcon();
 }
@@ -69,12 +65,9 @@ function disable() {
     Main.panel._rightBox.remove_child(button);
     _isAdded = false;
   }
-  Main.wm.setCustomKeybindingHandler(
-    "toggle-overview",
-    Shell.ActionMode.NORMAL,
-    Main.overview.toggle.bind(this, Main.overview)
-  );
-  delete Main.overview._specialToggle;
+
+  Main.wm.removeKeybinding("keybinding-show-popup");
+
   _visible = false;
 }
 
@@ -146,29 +139,6 @@ function _readShortcuts() {
       shortcuts: shortcutsTemp[section],
     });
   });
-
-  //OLD CODE TO READ JSON WITH SHORTCUTS
-  /*
-    let SHORTCUTS_FILE = this._settings.get_boolean("use-custom-shortcuts")
-      ? this._settings.get_string("shortcuts-file")
-      : Me.dir.get_child("shortcuts.json").get_path();
-
-    if (!GLib.file_test(SHORTCUTS_FILE, GLib.FileTest.EXISTS)) {
-      let msg = _("Shortcuts file not found: '%s'").format(SHORTCUTS_FILE);
-      Main.notifyError(msg);
-      return;
-    }
-
-    let file = Gio.file_new_for_path(SHORTCUTS_FILE);
-    let [result, contents] = file.load_contents(null);
-    if (!result) {
-      let msg = _("Unable to read file: '%s'").format(SHORTCUTS_FILE);
-      Main.notifyError(msg);
-      return;
-    }
-
-  //let shortcuts = JSON.parse(contents);
-  */
 
   let shortcuts = shortcutsAll;
   let shortcutLength = shortcuts.length;
