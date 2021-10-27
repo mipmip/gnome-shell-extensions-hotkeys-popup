@@ -285,8 +285,8 @@ function cleanupWidgets(){
   super_label = null;
   if(stage) {
     stage.destroy();
+    stage = null;
   }
-  stage = null;
 }
 
 /*
