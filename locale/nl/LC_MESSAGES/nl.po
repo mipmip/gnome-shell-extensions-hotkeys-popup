@@ -1,0 +1,76 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2018 Kyle Robbertze <kyle@aims.ac.za>
+# This file is distributed under the same license as the Hotkeys Popup package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-01 11:26+0200\n"
+"PO-Revision-Date: 2022-03-05 14:11+0100\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
+"Language-Team: \n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#: ../src/extension.js:66
+msgid "The super key is the Windows key on most keyboards"
+msgstr "Op de meeste toetsenborden is de Super-toets de Windows-toets"
+
+#: ../src/extension.js:83
+#, javascript-format
+msgid "Hotkeys Popup file not found: '%s'"
+msgstr "Het Hotkeys Popup-bestand is niet aangetroffen: ‘%s’"
+
+#: ../src/extension.js:90
+#, javascript-format
+msgid "Unable to read file: '%s'"
+msgstr "Het bestand kan niet worden uitgelezen: ‘%s’"
+
+#: ../src/prefs.js:32
+msgid "Custom Hotkeys Popup File"
+msgstr "Aangepast Hotkeys Popup-bestand"
+
+#: ../src/prefs.js:37
+msgid "Select shortcut file"
+msgstr "Kies een sneltoetsbestand"
+
+#: ../src/prefs.js:49
+msgid "Show tray icon"
+msgstr "Systeemvakpictogram tonen"
+
+#: ../src/schemas/org.gnome.shell.extensions.hotkeys-popup.gschema.xml:6
+msgid "Use an alternative file for shortcut descriptions"
+msgstr "Ander bestand gebruiken voor sneltoetsomschrijvingen"
+
+#: ../src/schemas/org.gnome.shell.extensions.hotkeys-popup.gschema.xml:7
+msgid ""
+"If true the shortcut file specified as hotkeys-popup-file will be used for "
+"custom hotkeys-popup."
+msgstr "Schakel in om een ander bestand op te geven."
+
+#: ../src/schemas/org.gnome.shell.extensions.hotkeys-popup.gschema.xml:11
+msgid "Alternative file for shortcut descriptions"
+msgstr "Ander bestand gebruiken voor sneltoetsomschrijvingen"
+
+#: ../src/schemas/org.gnome.shell.extensions.hotkeys-popup.gschema.xml:12
+msgid ""
+"If not empty it points to the shortcut file that will be read for the "
+"shortcut descriptions."
+msgstr "Schakel in om een ander bestand op te geven."
+
+#: ../src/schemas/org.gnome.shell.extensions.hotkeys-popup.gschema.xml:16
+msgid "Toggles the icon on the top panel"
+msgstr "Systeemvakpictogram op bovenbalk tonen/verbergen"
+
+#: ../src/schemas/org.gnome.shell.extensions.hotkeys-popup.gschema.xml:17
+msgid ""
+"If true an icon to activate the extension will be visible on the top pannel."
+msgstr ""
+"Schakel in om een pictogram op de bovenbalk te tonen waarmee de uitbreiding "
+"kan worden geactiveerd."
