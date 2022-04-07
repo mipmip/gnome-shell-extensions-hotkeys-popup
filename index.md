@@ -1,37 +1,44 @@
-## Welcome to GitHub Pages
+# Hotkeys Popup
 
-You can use the [editor on GitHub](https://github.com/mipmip/gnome-shell-extensions-hotkeys-popup/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Hotkeys Popup is a GNOME Shell Extension that displays currently configured
+Gnome hotkeys in a popup. The popup is activated with <kbd>Super + S</kbd>.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+*Tested with Gnome 40 en 41*. It might run correctly with other versions.
 
-### Markdown
+Currently it only shows some of the window manager shortcuts. In the future
+versions it should show personally configured shortcuts.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Features
 
-```markdown
-Syntax highlighted code block
+- Shows popup with hotkeys of Gnome Shell and Gnome Window Manager
+- Get configured shortcuts from GSettings
+- Works with Gnome 40 and 41
+- Transparency optional
+- Set hotkey key binding in preference
+- Choose which hotkeys should be displayed in popup
+- Add custom shortcuts from json file
 
-# Header 1
-## Header 2
-### Header 3
+## Future
 
-- Bulleted
-- List
+- Add more schema's
+- Add shortcuts from non GTK applications
+- Detect current active application to show it's shortcuts
+- Filter shortcuts
+- Colorize sections
+- Themes
 
-1. Numbered
-2. List
+## Usage
 
-**Bold** and _Italic_ and `Code` text
+### Configure
 
-[Link](url) and ![Image](src)
+Open preferences and enable and disable the keys your want to display.
+
+### Custom Hotkeys from JSON
+
+Copy example json file to `~/.hotkeys-popup-custom.json`.
+
+```
+curl https://raw.githubusercontent.com/mipmip/gnome-shell-extensions-hotkeys-popup/main/hotkeys-popup-custom-example.json > ~/.hotkeys-popup-custom.json
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/mipmip/gnome-shell-extensions-hotkeys-popup/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+Edit this with your own keys.
