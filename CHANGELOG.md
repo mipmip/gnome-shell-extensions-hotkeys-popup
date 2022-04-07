@@ -1,3 +1,17 @@
+### Version NEXT
+
+- add read optional json file with custom user keys
+
+### Version 2
+
+- remove outdated convenience
+- eslint
+- no support for <40 functions
+- use native gsettings
+- configure shortcut combination
+- cleanup preferences
+- get keys without shellscript
+
 ### Version 1
 
 - Shows popup with hotkeys of Gnome Shell and Gnome Window Manager
@@ -10,12 +24,3 @@
 - show shell keybindings
 - Configure which key-bindings are listed in the popup (v1)
 
-### Version 2
-
-- remove outdated convenience
-- eslint
-- no support for <40 functions
-- use native gsettings
-- configure shortcut combination
-- cleanup preferences
-- get keys without shellscript

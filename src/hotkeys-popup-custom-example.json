@@ -1,0 +1,56 @@
+[
+    {
+        "name": "Vim",
+        "shortcuts": [
+            {
+                "key": "Esc",
+                "description": "Command mode"
+            },
+            {
+                "key": "i",
+                "description": "Insert mode"
+            },
+            {
+                "key": "h",
+                "description": "Move character left"
+            },
+            {
+                "key": "j",
+                "description": "Move character down"
+            },
+            {
+                "key": "k",
+                "description": "Move character up"
+            },
+            {
+                "key": "l",
+                "description": "Move character right"
+            }
+        ]
+    },
+    {
+        "name": "Some Application Shortcuts",
+        "shortcuts": [
+            {
+                "key": "Ctrl + W",
+                "description": "Close tab in tab enabled apps"
+            },
+            {
+                "key": "Ctrl + T",
+                "description": "Opens new tab in tab enabled apps"
+            },
+            {
+                "key": "Ctrl + Shift + T",
+                "description": "Reopen last closed tab in web browser"
+            },
+            {
+                "key": "F5",
+                "description": "Evince (document viewer) presentation mode)"
+            },
+            {
+                "key": "F9",
+                "description": "LibreOffice presentation mode"
+            }
+        ]
+   }
+]

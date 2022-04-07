@@ -19,6 +19,7 @@ const Shell = imports.gi.Shell;
 const Meta = imports.gi.Meta;
 const St = imports.gi.St;
 const Clutter = imports.gi.Clutter;
+const GLib = imports.gi.GLib;
 const Gio = imports.gi.Gio;
 
 const Gettext = imports.gettext;
@@ -89,11 +90,41 @@ function _toggleShortcuts() {
  * Reads the shortcuts from a file specified in the settings. If this is not
  * there then it defaults to the shortcuts file provided by the extension.
  */
-function _readShortcuts() {
+function _readShortcutsFromFile() {
 
+
+
+  /*
+  let SHORTCUTS_FILE = this._settings.get_boolean("use-custom-shortcuts")
+    ? this._settings.get_string("shortcuts-file")
+    : Me.dir.get_child("shortcuts.json").get_path();
+  */
+
+  const SHORTCUTS_FILE = GLib.build_filenamev([GLib.get_home_dir(), '.hotkeys-popup-custom.json']);
+  //let SHORTCUTS_FILE = "~/.hotkeys-popup-custom.json";
+
+  if (!GLib.file_test(SHORTCUTS_FILE, GLib.FileTest.EXISTS)) {
+    let msg = _("Shortcuts file not found: '%s'").format(SHORTCUTS_FILE);
+    Main.notifyError(msg);
+    return [];
+  }
+
+  let file = Gio.file_new_for_path(SHORTCUTS_FILE);
+  let [result, contents] = file.load_contents(null);
+  if (!result) {
+    let msg = _("Unable to read file: '%s'").format(SHORTCUTS_FILE);
+    Main.notifyError(msg);
+    return;
+  }
+
+  let shortcutsFromFile = JSON.parse(contents);
+  return shortcutsFromFile;
+}
+
+function _readShortcutsFromSystem(){
   let hideArray = _settings.get_strv("hide-array");
 
-  shortcutsAll = [];
+  shortcutsFromSystem = [];
   let shortcutsTemp = {};
 
   let schemas = [
@@ -128,16 +159,28 @@ function _readShortcuts() {
   });
 
   Object.keys(shortcutsTemp).forEach((section)=> {
-
-    shortcutsAll.push({
+    shortcutsFromSystem.push({
       name: ShortLib.translateSchemaNames(section),
       shortcuts: shortcutsTemp[section],
     });
   });
 
-  let shortcuts = shortcutsAll;
+  return shortcutsFromSystem;
+}
+
+/**
+ * Reads the shortcuts from schema's and a file specified in the settings. If this is not
+ * there then it defaults to the shortcuts file provided by the extension.
+ */
+function _readShortcuts() {
+
+  let shortcutsFromSystem = _readShortcutsFromSystem();
+  let shortcutsFromFile = _readShortcutsFromFile();
+
+  let shortcuts = [...shortcutsFromSystem, ...shortcutsFromFile];
   let shortcutLength = shortcuts.length;
   for (let i = 0; i < shortcuts.length; i++) {
+    if( i == 0) shortcutLength += 10; // EVERY header takes more space
     shortcutLength += shortcuts[i].shortcuts.length;
   }
 
@@ -234,6 +277,7 @@ function _showPopup(){
     panel_panel.add_actor(right_panel);
 
     _readShortcuts();
+    //_readShortcutsFromFile();
 
     super_label = new St.Label({
       style_class: "superkey-prompt",

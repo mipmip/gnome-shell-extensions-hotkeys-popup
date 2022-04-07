@@ -3,7 +3,7 @@
 Hotkeys Popup is a GNOME Shell Extension that displays currently configured
 Gnome hotkeys in a popup. The popup is activated with <kbd>Super + S</kbd>.
 
-*Only tested with Gnome 40*. It might run correctly with other versions.
+*Tested with Gnome 40 en 41*. It might run correctly with other versions.
 
 Currently it only shows some of the window manager shortcuts. In the future
 versions it should show personally configured shortcuts.
@@ -12,7 +12,7 @@ versions it should show personally configured shortcuts.
 
 - Shows popup with hotkeys of Gnome Shell and Gnome Window Manager
 - Get configured shortcuts from GSettings
-- Works with Gnome 40
+- Works with Gnome 40 and 41
 - Transparency optional
 - Set hotkey key binding in preference
 - Choose which hotkeys should be displayed in popup

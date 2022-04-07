@@ -152,7 +152,6 @@ var Check = GObject.registerClass({
   }
 });
 
-
 /* exported Label */
 var Label = GObject.registerClass({
   GTypeName: 'Gjs_%s_UI_Label'.format(Uuid),
@@ -181,3 +180,7 @@ var LargeLabel = GObject.registerClass({
     });
   }
 });
+
+
+
+
