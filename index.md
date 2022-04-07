@@ -5,8 +5,7 @@ Gnome hotkeys in a popup. The popup is activated with <kbd>Super + S</kbd>.
 
 *Tested with Gnome 40 en 41*. It might run correctly with other versions.
 
-Currently it only shows some of the window manager shortcuts. In the future
-versions it should show personally configured shortcuts.
+![hotkeyspopup](https://user-images.githubusercontent.com/658612/162179698-06d7aa3b-3b60-4da0-b981-b57266c7e8fd.png)
 
 ## Features
 
