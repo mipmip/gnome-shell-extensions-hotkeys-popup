@@ -16,16 +16,25 @@ versions it should show personally configured shortcuts.
 - Transparency optional
 - Set hotkey key binding in preference
 - Choose which hotkeys should be displayed in popup
+- Add custom shortcuts from json file
 
 ## Future
 
 - Add more schema's
 - Add shortcuts from non GTK applications
-- Add custom shortcuts
 - Detect current active application to show it's shortcuts
 - Filter shortcuts
 - Colorize sections
 - Themes
+
+## Usage
+
+### Custom Shortcuts from JSON
+
+
+
+
+
 
 ## Contributing
 
