@@ -92,16 +92,7 @@ function _toggleShortcuts() {
  */
 function _readShortcutsFromFile() {
 
-
-
-  /*
-  let SHORTCUTS_FILE = this._settings.get_boolean("use-custom-shortcuts")
-    ? this._settings.get_string("shortcuts-file")
-    : Me.dir.get_child("shortcuts.json").get_path();
-  */
-
   const SHORTCUTS_FILE = GLib.build_filenamev([GLib.get_home_dir(), '.hotkeys-popup-custom.json']);
-  //let SHORTCUTS_FILE = "~/.hotkeys-popup-custom.json";
 
   if (!GLib.file_test(SHORTCUTS_FILE, GLib.FileTest.EXISTS)) {
     let msg = _("Shortcuts file not found: '%s'").format(SHORTCUTS_FILE);

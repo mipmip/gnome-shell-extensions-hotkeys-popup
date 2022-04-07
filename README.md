@@ -43,7 +43,6 @@ curl https://raw.githubusercontent.com/mipmip/gnome-shell-extensions-hotkeys-pop
 
 Edit this with your own keys.
 
-
 ## Contributing
 
 1. Fork it ( https://github.com/mipmip/gnome-shell-extensions-hotkeys-popup/fork )
