@@ -29,11 +29,19 @@ versions it should show personally configured shortcuts.
 
 ## Usage
 
-### Custom Shortcuts from JSON
+### Configure
 
+Open preferences and enable and disable the keys your want to display.
 
+### Custom Hotkeys from JSON
 
+Copy example json file to `~/.hotkeys-popup-custom.json`.
 
+```
+curl https://raw.githubusercontent.com/mipmip/gnome-shell-extensions-hotkeys-popup/main/hotkeys-popup-custom-example.json > ~/.hotkeys-popup-custom.json
+```
+
+Edit this with your own keys.
 
 
 ## Contributing
