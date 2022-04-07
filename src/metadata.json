@@ -1,7 +1,7 @@
 {
     "name": "Hotkeys Popup",
     "uuid": "hotkeys-popup@pimsnel.com",
-    "url": "https://github.com/mipmip/gnome-shell-extensions-hotkeys-popup",
+    "url": "https://mipmip.github.io/gnome-shell-extensions-hotkeys-popup/",
     "description": "Pop-up cheatsheet with currently configured keyboard shortcuts.",
     "gettext-domain": "hotkeys-popup",
     "settings-schema": "org.gnome.shell.extensions.hotkeys-popup",
