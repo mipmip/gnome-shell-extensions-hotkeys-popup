@@ -277,6 +277,23 @@ function _showPopup(){
 
     stage.add_actor( super_label);
 
+    global.stage.connect("key-press-event", (actor, event) => {
+      global.log("jojjoe2");
+      _toggleShortcuts();
+      /*
+      let [success, keyval] = event.get_keyval(); // integer
+      let keyname = Gdk.keyval_name(keyval); // string keyname
+
+      if (keyname === "Control_L") {
+        // Dialog code or eg. this.keys_array.push("<Ctrl>");
+      }
+      */
+    });
+
+    stage.connect('button-press-event', (actor, event) => {
+      _toggleShortcuts();
+    });
+
     Main.pushModal(stage, { actionMode: Shell.ActionMode.NORMAL });
     Main.layoutManager.addTopChrome(stage);
   }
