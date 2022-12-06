@@ -1,6 +1,6 @@
 {
   "name": "gnome-shell-extensions-hotkeys-popup",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "Hotkeys Popup is a GNOME Shell Extension that displays currently configured Gnome hotkeys in a popup. The popup is activated with <kbd>Super + S</kbd>.",
   "main": "index.js",
   "scripts": {
