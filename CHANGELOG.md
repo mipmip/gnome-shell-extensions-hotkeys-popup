@@ -1,3 +1,8 @@
+### Version 6
+
+- support for 42, 43
+- hide at mouse click
+
 ### Version 5
 
 - add read optional json file with custom user keys
