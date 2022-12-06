@@ -1,5 +1,5 @@
 # Changelog
-## 2.0.0 (2022-12-06)
+## **WORK IN PROGRESS**
 
 - support for 42, 43
 - hide at mouse click
