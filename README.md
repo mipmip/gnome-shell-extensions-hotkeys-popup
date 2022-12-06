@@ -6,12 +6,16 @@ Gnome hotkeys in a popup.
 ## Features
 
 - Show Gnome hotkeys found by introspection.
-- Hide hotkeys you already your not interested in.
+- Choose which hotkeys should be displayed in popup
 - Add your own extra hotkeys and hotkey groups.
+- Works with Gnome 40,41,42 and 43
+- Transparency optional
 
 ![](./screenshot.png)
 
 ## Usage
+
+The popup is activated with <kbd>Super + S</kbd>.
 
 Open the preference to enable of disable automatically found hotkeys.
 
@@ -39,4 +43,21 @@ This extension is initially forked from [Shortcuts]
 ### Install
 
 You may need to restart GNOME (Alt + F2, r) before you see Shortcuts in your
-list of extensions
+list of extensions.
+
+### Lint
+
+```
+npm run lint
+```
+
+### Release
+
+Set correct version in metadata.js
+
+```
+npm run release-git
+```
+
+Convert tag to release in github.
+
