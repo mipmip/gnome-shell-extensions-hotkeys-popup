@@ -1,13 +1,15 @@
-### Version 6
+## **WORK IN PROGRESS**
 
 - support for 42, 43
 - hide at mouse click
+- improve readme
+- improve release flow
 
-### Version 5
+## Version 5
 
 - add read optional json file with custom user keys
 
-### Version 2
+## Version 2
 
 - remove outdated convenience
 - eslint
@@ -17,7 +19,7 @@
 - cleanup preferences
 - get keys without shellscript
 
-### Version 1
+## Version 1
 
 - Shows popup with hotkeys of Gnome Shell and Gnome Window Manager
 - works with Gnome 40
@@ -28,4 +30,3 @@
 - hardcoded hide shortcuts
 - show shell keybindings
 - Configure which key-bindings are listed in the popup (v1)
-
