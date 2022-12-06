@@ -4,7 +4,8 @@
   "description": "Hotkeys Popup is a GNOME Shell Extension that displays currently configured Gnome hotkeys in a popup. The popup is activated with <kbd>Super + S</kbd>.",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "release-git": "release-script --addPlaceholder"
   },
   "repository": {
     "type": "git",
@@ -16,8 +17,8 @@
     "url": "https://github.com/mipmip/gnome-shell-extensions-hotkeys-popup/issues"
   },
   "homepage": "https://github.com/mipmip/gnome-shell-extensions-hotkeys-popup#readme",
-  "dependencies": {},
   "devDependencies": {
-    "eslint": "^8.1.0"
+    "eslint": "^8.1.0",
+    "@alcalzone/release-script": "^3.5.9"
   }
 }

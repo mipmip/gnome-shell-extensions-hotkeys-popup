@@ -3,7 +3,23 @@
 Hotkeys Popup is a GNOME Shell Extension that displays currently configured
 Gnome hotkeys in a popup.
 
-Documentation is located at https://mipmip.github.io/gnome-shell-extensions-hotkeys-popup/
+## Features
+
+- Show Gnome hotkeys found by introspection.
+- Hide hotkeys you already your not interested in.
+- Add your own extra hotkeys and hotkey groups.
+
+![](./screenshot.png)
+
+## Usage
+
+Open the preference to enable of disable automatically found hotkeys.
+
+You can add extra shortcuts from a JSON File. Download the sample config file, and add you own groups and hotkeys.
+
+```
+curl https://raw.githubusercontent.com/mipmip/gnome-shell-extensions-hotkeys-popup/main/hotkeys-popup-custom-example.json > ~/.hotkeys-popup-custom.json
+```
 
 ## Contributing
 

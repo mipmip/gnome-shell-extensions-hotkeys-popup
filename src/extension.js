@@ -268,7 +268,6 @@ function _showPopup(){
     panel_panel.add_actor(right_panel);
 
     _readShortcuts();
-    //_readShortcutsFromFile();
 
     super_label = new St.Label({
       style_class: "superkey-prompt",
@@ -279,14 +278,6 @@ function _showPopup(){
 
     global.stage.connect("key-press-event", () => {
       _toggleShortcuts();
-      /*
-      let [success, keyval] = event.get_keyval(); // integer
-      let keyname = Gdk.keyval_name(keyval); // string keyname
-
-      if (keyname === "Control_L") {
-        // Dialog code or eg. this.keys_array.push("<Ctrl>");
-      }
-      */
     });
 
     stage.connect('button-press-event', () => {
