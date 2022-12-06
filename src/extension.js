@@ -277,8 +277,7 @@ function _showPopup(){
 
     stage.add_actor( super_label);
 
-    global.stage.connect("key-press-event", (actor, event) => {
-      global.log("jojjoe2");
+    global.stage.connect("key-press-event", () => {
       _toggleShortcuts();
       /*
       let [success, keyval] = event.get_keyval(); // integer
@@ -290,7 +289,7 @@ function _showPopup(){
       */
     });
 
-    stage.connect('button-press-event', (actor, event) => {
+    stage.connect('button-press-event', () => {
       _toggleShortcuts();
     });
 
