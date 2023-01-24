@@ -3,6 +3,8 @@
 Hotkeys Popup is a GNOME Shell Extension that displays currently configured
 Gnome hotkeys in a popup.
 
+[<img src="./get-it-on-ego.png" height="100">](https://github.com/mipmip/gnome-shell-extensions-hotkeys-popup)
+
 ## Features
 
 - Show Gnome hotkeys found by introspection.
