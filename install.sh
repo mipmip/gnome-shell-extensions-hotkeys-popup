@@ -9,11 +9,28 @@ fi
 
 NAME=hotkeys-popup\@pimsnel.com
 
+function pack-extension {
+  echo "Packing extension..."
+  compile-translations
+  compile-preferences
+  gnome-extensions pack src \
+    --force \
+    --extra-source="../LICENSE" \
+    --extra-source="../CHANGELOG.md" \
+    --extra-source="shortcutslib.js" \
+    --extra-source="stylesheet.css" \
+    --extra-source="ui.js"
+}
+
 function compile-translations {
-    echo 'Compiling translations...'
-    for po in locale/*/LC_MESSAGES/*.po; do
+    if [ -d locale ]; then
+      echo 'Compiling translations...'
+      for po in locale/*/LC_MESSAGES/*.po; do
         msgfmt -cv -o ${po%.po}.mo $po;
-    done
+      done
+    else
+        echo 'No translations to compile... Skipping'
+    fi
 }
 
 function compile-preferences {
@@ -23,43 +40,6 @@ function compile-preferences {
     else
         echo 'No preferences to compile... Skipping'
     fi
-}
-
-function make-local-install {
-    DEST=~/.local/share/gnome-shell/extensions/$NAME
-
-    compile-translations
-    compile-preferences
-
-    echo 'Installing...'
-    if [ ! -d $DEST ]; then
-        mkdir $DEST
-    fi
-    cp -r src/* locale $DEST/
-
-    busctl --user call org.gnome.Shell /org/gnome/Shell org.gnome.Shell Eval s 'Meta.restart("Restarting…")'
-
-    echo 'Done'
-}
-
-function make-zip {
-    if [ -d build ]; then
-        rm -r build
-    fi
-
-    rm -fv "$NAME".zip
-    mkdir build
-    compile-translations
-    compile-preferences
-    echo 'Coping files...'
-    cp -r LICENSE README.md src/* locale build/
-    find build -name "*.po*" -delete
-    echo 'Creating archive..'
-    cd build
-    zip -r ../"$NAME".zip ./*
-    cd ..
-    rm -r build
-    echo 'Done'
 }
 
 function usage() {
@@ -72,11 +52,12 @@ function usage() {
 
 case "$1" in
     "local-install" )
-        make-local-install
+        pack-extension
+        gnome-extensions install --force $NAME.shell-extension.zip
         ;;
 
     "zip" )
-        make-zip
+        pack-extension
         ;;
 
     * )
