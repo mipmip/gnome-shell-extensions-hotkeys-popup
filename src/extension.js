@@ -72,6 +72,7 @@ function disable() {
 
   cleanupWidgets();
   _visible = false;
+  _settings = null;
 }
 
 /**

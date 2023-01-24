@@ -18,14 +18,11 @@ const GObject = imports.gi.GObject;
 const Gio = imports.gi.Gio;
 const Gtk = imports.gi.Gtk;
 
-const Gettext = imports.gettext;
-const _ = Gettext.gettext;
-
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const ShortLib = Me.imports.shortcutslib;
 const UI = Me.imports.ui;
-const _settings = ExtensionUtils.getSettings();
+//const _settings = ExtensionUtils.getSettings();
 
 /**
  * Initialises the preferences widget
@@ -43,34 +40,6 @@ function buildPrefsWidget() {
 
   let widget = new ShortcutsPrefsWidget();
   return widget;
-}
-
-function updateHideArrayAdd(itemKey){
-  if(!_settings){
-    _settings = ExtensionUtils.getSettings();
-  }
-
-  let hideArray = _settings.get_strv("hide-array");
-  const index = hideArray.indexOf(itemKey);
-
-  if (index === -1) {
-    hideArray.push(itemKey);
-    _settings.set_strv("hide-array", hideArray);
-  }
-}
-
-function updateHideArrayRemove(itemKey){
-  if(!_settings){
-    _settings = ExtensionUtils.getSettings();
-  }
-
-  let hideArray = _settings.get_strv("hide-array");
-  const index = hideArray.indexOf(itemKey);
-
-  if (index > -1) {
-    hideArray.splice(index, 1);
-    _settings.set_strv("hide-array", hideArray);
-  }
 }
 
 /**
@@ -93,8 +62,9 @@ const ShortcutsPrefsWidget = new GObject.Class({
       }
     );
 
-    this.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
+    this._settings = ExtensionUtils.getSettings();
 
+    this.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
 
     this._grid = new UI.ListGrid();
 
@@ -103,18 +73,18 @@ const ShortcutsPrefsWidget = new GObject.Class({
     let mainSettingsLabel = new UI.LargeLabel("Main Settings");
     this._grid._add(mainSettingsLabel)
 
-    this._field_shortcut = new UI.Shortcut(_settings.get_strv("keybinding-show-popup"));
+    this._field_shortcut = new UI.Shortcut(this._settings.get_strv("keybinding-show-popup"));
     let label_shortcut = new UI.Label('Shortcut Keybinding')
     this._grid._add(label_shortcut, this._field_shortcut);
 
-    this._field_shortcut.connect('changed', (widget, keys) => { _settings.set_strv("keybinding-show-popup", [keys]); });
+    this._field_shortcut.connect('changed', (widget, keys) => { this._settings.set_strv("keybinding-show-popup", [keys]); });
 
     let showIconCheckButton = new UI.Check("Show tray icon");
-    _settings.bind('show-icon', showIconCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
+    this._settings.bind('show-icon', showIconCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
     this._grid._add(showIconCheckButton);
 
     let showTransparentCheckButton = new UI.Check("Transparent Background");
-    _settings.bind('transparent-popup', showTransparentCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
+    this._settings.bind('transparent-popup', showTransparentCheckButton, 'active', Gio.SettingsBindFlags.DEFAULT);
     this._grid._add(showTransparentCheckButton);
 
     let jsonLabel = new UI.LargeLabel("Shortcuts from json File");
@@ -126,7 +96,7 @@ const ShortcutsPrefsWidget = new GObject.Class({
     let hide_items = {};
     let hide_schemas = {};
 
-    let hideArray = _settings.get_strv("hide-array");
+    let hideArray = this._settings.get_strv("hide-array");
 
     let schemas = [
       'org.gnome.shell.keybindings',
@@ -158,10 +128,10 @@ const ShortcutsPrefsWidget = new GObject.Class({
           hide_items[key].connect("toggled", ( w ) => {
 
             if(w.get_active()){
-              updateHideArrayRemove(key);
+              this.updateHideArrayRemove(key);
             }
             else{
-              updateHideArrayAdd(key);
+              this.updateHideArrayAdd(key);
             }
           });
 
@@ -171,5 +141,29 @@ const ShortcutsPrefsWidget = new GObject.Class({
       })
     });
 
+  },
+
+  updateHideArrayRemove: function(itemKey){
+
+    let hideArray = this._settings.get_strv("hide-array");
+    const index = hideArray.indexOf(itemKey);
+
+    if (index > -1) {
+      hideArray.splice(index, 1);
+      this._settings.set_strv("hide-array", hideArray);
+    }
+  },
+
+  updateHideArrayAdd: function(itemKey){
+
+    let hideArray = this._settings.get_strv("hide-array");
+    const index = hideArray.indexOf(itemKey);
+
+    if (index === -1) {
+      hideArray.push(itemKey);
+      this._settings.set_strv("hide-array", hideArray);
+    }
   }
+
+
 });
